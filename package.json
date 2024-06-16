@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@aws-amplify/react-native": "^1.1.1",
+    "@aws-amplify/ui-react": "^6.1.12",
     "@aws-amplify/ui-react-native": "^2.2.2",
     "@expo/metro-runtime": "~3.2.1",
     "@react-native-async-storage/async-storage": "^1.23.1",
