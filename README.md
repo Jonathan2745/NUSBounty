@@ -18,4 +18,4 @@ This application is Hosted on AWS web services, using PostgreSQL datavase, and u
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
 
 ## LINK: 
-**Please do feel free to visit us at: www.nusbounty.com ~**
+Please do feel free to visit us at: www.nusbounty.com ~
