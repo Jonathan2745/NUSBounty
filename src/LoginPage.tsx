@@ -4,12 +4,9 @@ import { Button, View, StyleSheet, SafeAreaView } from "react-native";
 import { Amplify } from "aws-amplify";
 import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react-native";
 
-import outputs from "./amplify_outputs.json";
+import outputs from "../amplify_outputs.json";
 
-import {NavigationContainer} from '@react-navigation/native';
-
-import TodoList from "./src/TodoList";
-import LoginPage from "./src/LoginPage";
+import TodoList from "./TodoList";
 
 
 Amplify.configure(outputs);
@@ -24,18 +21,16 @@ const SignOutButton = () => {
   );
 };
 
-const App = () => {
+const LoginPage = ({navigation}) => {
   return (
-    <NavigationContainer>
-      <Authenticator.Provider>
-        <Authenticator>
-          <SafeAreaView style={styles.container}>
-            <SignOutButton />
-            <TodoList />
-          </SafeAreaView>
-        </Authenticator>
-      </Authenticator.Provider>
-    </NavigationContainer>
+    <Authenticator.Provider>
+      <Authenticator>
+        <SafeAreaView style={styles.container}>
+          <SignOutButton />
+          <TodoList />
+        </SafeAreaView>
+      </Authenticator>
+    </Authenticator.Provider>
   );
 };
 
@@ -49,5 +44,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default LoginPage;
 
