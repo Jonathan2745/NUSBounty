@@ -4,7 +4,7 @@ This repository is for the timeline and development of the Application "NUSBount
 
 ## Overview
 
-This application is Hosted on AWS web services, using PostgreSQL datavase, and using the React Native Framework
+This application is Hosted on AWS web services, using GraphQL database, and using the React Native Framework
 
 ## Features
 
