@@ -7,15 +7,15 @@ import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 
 import { Routes, Route } from "react-router-dom";
-import { LoginPage } from "../pages/Login.jsx";
-import { HomePage } from "../pages/Home.jsx";
-import { Secret } from "../pages/Secret.jsx";
-import { ProfilePage } from "../pages/Profile.jsx";
+import { LoginPage } from "../pages/Login.tsx";
+import { HomePage } from "../pages/Home.tsx";
+import { Secret } from "../pages/Secret.tsx";
+import { ProfilePage } from "../pages/Profile.tsx";
 
 
 import "./App.css";
-import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
-import { AuthProvider } from "./hooks/useAuth.jsx";
+import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
+import { AuthProvider } from "./hooks/useAuth.js";
 
 const client = generateClient<Schema>();
 

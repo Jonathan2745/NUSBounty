@@ -1,4 +1,4 @@
-import { useAuth } from "../src/hooks/useAuth";
+import { useAuth } from "../src/hooks/useAuth.tsx";
 
 export const Secret = () => {
   const { logout } = useAuth();
