@@ -122,6 +122,8 @@ Amplify.configure(outputs);
 export const LoginPage: React.FC = () => {
 
   return (
+    <div>
+    <h1 className="text-5xl mb-6 font-semibold"> Welcome to NUSBounty </h1>
     <Authenticator>
       {({ user }) => (
         <main>
@@ -130,5 +132,7 @@ export const LoginPage: React.FC = () => {
         </main>
       )}
     </Authenticator>
+    </div>  
+
   );
 }
