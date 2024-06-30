@@ -63,17 +63,13 @@
 
 
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { uploadData } from "aws-amplify/storage";
-import { useAuth } from "../src/hooks/useAuth"; // Adjust the path if necessary
 import { StorageImage } from "@aws-amplify/ui-react-storage";
+import { NavigationButtons } from "../src/components/NavigationButtons";
 
 export const ProfilePage: React.FC = () => {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
   const { user } = useAuthenticator((context) => [context.user]);
-  const [shouldNavigate, setShouldNavigate] = useState<number | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [identityId, setIdentityId] = useState<string | null>(null);
 
@@ -89,26 +85,6 @@ export const ProfilePage: React.FC = () => {
 
     fetchIdentityId();
   }, []);
-
-  const handleLogout = () => {
-    logout();
-  };
-
-  const handleSecrets = () => {
-    setShouldNavigate(1);
-  };
-
-  const handleHome = () => {
-    setShouldNavigate(2);
-  };
-
-  useEffect(() => {
-    if (shouldNavigate === 1) {
-      navigate("/secret");
-    } else if (shouldNavigate === 2) {
-      navigate("/home");
-    }
-  }, [shouldNavigate, navigate]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files ? event.target.files[0] : null;
@@ -134,17 +110,22 @@ export const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>This is a Profile page</h1>
-      <StorageImage
-      alt="Profile Picture"
-      path={'picture-submissions/placeholder.jpg'}
-    />
-      <button onClick={handleLogout}>Logout</button>
-      <button onClick={handleSecrets}>Secrets</button>
-      <button onClick={handleHome}>Home</button>
-      <input type="file" onChange={handleChange} />
-      <button onClick={handleUpload}>Upload</button>
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="m-12">
+        <h1 className="text-5xl mb-6 font-semibold">Profile</h1>
+        <StorageImage
+          alt="Profile Picture"
+          path={({ identityId }) => `picture-submissions/${identityId}`}
+        />
+        <input type="file" onChange={handleChange} />
+        <button
+          onClick={handleUpload}
+          className="bg-amplify-teal px-5 py-3 rounded-md text-white text-lg font-bold"
+        >
+          Upload
+        </button>
+      </div>
+      <NavigationButtons />
     </div>
   );
 };

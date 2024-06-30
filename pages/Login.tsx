@@ -112,35 +112,21 @@ import { Authenticator } from '@aws-amplify/ui-react';
 import { Amplify } from 'aws-amplify';
 import '@aws-amplify/ui-react/styles.css';
 import outputs from "../amplify_outputs.json";
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { NavigationButtons } from '../src/components/NavigationButtons';
 
 
 
 Amplify.configure(outputs);
 
 export const LoginPage: React.FC = () => {
-  const navigate = useNavigate();
-  const [shouldNavigate, setShouldNavigate] = useState(0);
-  
-  const handleHome = () => { 
-    setShouldNavigate(2);
-  };
-
-  useEffect(() => {
-    if (shouldNavigate == 2) {
-      navigate("/home");
-    }
-  }, [shouldNavigate, navigate]);
-
 
   return (
     <Authenticator>
-      {({ signOut, user }) => (
+      {({ user }) => (
         <main>
           <h1>Hello {user?.username}</h1>
-          <button onClick={signOut}>Sign out</button>
-          <button onClick={handleHome}>Home</button>
+          <NavigationButtons />
         </main>
       )}
     </Authenticator>

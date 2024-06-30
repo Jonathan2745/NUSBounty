@@ -1,16 +1,11 @@
-import { useAuth } from "../src/hooks/useAuth.tsx";
+import { NavigationButtons } from "../src/components/NavigationButtons";
+
 
 export const Secret = () => {
-  const { logout } = useAuth();
-
-  const handleLogout = () => {
-    logout();
-  };
-
   return (
-    <div>
-      <h1>This is a Secret page</h1>
-      <button onClick={handleLogout}>Logout</button>
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <h1 className="text-5xl mb-6 font-semibold">Secret</h1>
+      <NavigationButtons />
     </div>
   );
 };
