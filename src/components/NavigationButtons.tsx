@@ -1,16 +1,13 @@
-import { useAuth } from "../hooks/useAuth.tsx";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
 
 export const NavigationButtons = () => {
-  const { user, signOut } = useAuthenticator((context) => [context.user]);  const navigate = useNavigate();
+  const { signOut } = useAuthenticator((context) => [context.user]);  const navigate = useNavigate();
   const [shouldNavigate, setShouldNavigate] = useState(0);
 
-  const handleLogout = () => {
-    logout();
-  };
+
 
   const handleSecrets = () => {
     setShouldNavigate(1);

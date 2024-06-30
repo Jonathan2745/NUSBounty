@@ -1,5 +1,5 @@
 import { NavigationButtons } from "../src/components/NavigationButtons";
-import { Collection, Card, Heading, Image, View, Badge, Flex, Divider, Button } from '@aws-amplify/ui-react';
+import { Collection, Card, Heading, View, Badge, Flex, Divider, Button } from '@aws-amplify/ui-react';
 import { StorageImage } from "@aws-amplify/ui-react-storage";
 
 export const JobPage = () => {
