@@ -95,7 +95,7 @@ export const ProfilePage: React.FC = () => {
     if (file && identityId) {
       try {
         uploadData({
-          path: `picture-submissions/${identityId}/${file.name}`,
+          path: `picture-submissions/${identityId}`,
           data: file
         });
 
