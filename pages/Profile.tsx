@@ -138,7 +138,7 @@ export const ProfilePage: React.FC = () => {
       <h1>This is a Profile page</h1>
       <StorageImage
       alt="Profile Picture"
-      path={'protected/placeholder.jpg'}
+      path={'picture-submissions/placeholder.jpg'}
     />
       <button onClick={handleLogout}>Logout</button>
       <button onClick={handleSecrets}>Secrets</button>
