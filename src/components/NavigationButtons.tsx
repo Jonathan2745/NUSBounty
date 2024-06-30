@@ -27,10 +27,25 @@ export const NavigationButtons = () => {
   };
 
   return (
-    <div>
-      <button onClick={handleProfile}>Profile</button>
-      <button onClick={handleSecrets}>My Secrets</button>
-      <button onClick={handleLogout}>Logout</button>
+    <div className="flex space-x-4 m-3 text-white text-lg font-bold">
+      <button
+        onClick={handleProfile}
+        className="bg-amplify-teal px-5 py-3 rounded-md"
+      >
+        Profile
+      </button>
+      <button
+        onClick={handleSecrets}
+        className="bg-amplify-teal px-5 py-3 rounded-md"
+      >
+        My Secrets
+      </button>
+      <button
+        onClick={handleLogout}
+        className="bg-amplify-teal px-5 py-3 rounded-md"
+      >
+        Logout
+      </button>
     </div>
   );
 };

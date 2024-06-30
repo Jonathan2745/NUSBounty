@@ -2,7 +2,11 @@
 export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}", "./index.html", "./pages/**/*.{js,jsx,ts,tsx}" ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'amplify-teal': 'hsl(190, 95%, 30%)'
+      }
+    },
   },
   plugins: [],
 }
