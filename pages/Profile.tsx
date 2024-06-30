@@ -119,7 +119,7 @@ export const ProfilePage: React.FC = () => {
     if (file && identityId) {
       try {
         uploadData({
-          path: `picture-submissions/${identityId}/${file.name}`,
+          path: `picture-submissions/${identityId}`,
           data: file
         });
 
@@ -136,10 +136,7 @@ export const ProfilePage: React.FC = () => {
   return (
     <div>
       <h1>This is a Profile page</h1>
-      <StorageImage
-      alt="Profile Picture"
-      path={'picture-submissions/placeholder.jpg'}
-    />
+      <StorageImage alt="Profile Picture" path={"picture-submissions/placeholder.jpg"} />
       <button onClick={handleLogout}>Logout</button>
       <button onClick={handleSecrets}>Secrets</button>
       <button onClick={handleHome}>Home</button>
