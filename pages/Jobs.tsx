@@ -1,8 +1,33 @@
 import { NavigationButtons } from "../src/components/NavigationButtons";
 import { Collection, Card, Heading, View, Badge, Flex, Divider, Button } from '@aws-amplify/ui-react';
 import { StorageImage } from "@aws-amplify/ui-react-storage";
+import { SearchField } from "@aws-amplify/ui-react";
+import * as React from 'react';
+
 
 export const JobPage = () => {
+    const inputRef = React.useRef<HTMLInputElement | null>(null);
+    const searchButtonRef = React.useRef<HTMLButtonElement | null>(null);
+  
+    const onClick = React.useCallback(() => {
+      if( inputRef.current ){
+        inputRef.current.focus();
+      alert(`You searched for: ${inputRef.current.value}`);
+      }
+    }, []);
+  
+    React.useEffect(() => {
+      const searchButtonRefCurrent = searchButtonRef.current;
+      if (searchButtonRef && searchButtonRefCurrent) {
+        // Note: this example is contrived to demonstrate using refs.
+        // Use the `onSubmit` prop on `SearchField` instead which
+        // responds to input field `Enter` keypresses and Submit button clicks.
+        searchButtonRefCurrent.addEventListener('click', onClick, false);
+        return () => {
+          searchButtonRefCurrent.removeEventListener('click', onClick, false);
+        };
+      }
+    }, [onClick]);
 
     const items = [
         {
@@ -23,6 +48,7 @@ export const JobPage = () => {
     <div className="flex flex-col items-center justify-center min-h-screen">
       <h1 className="text-5xl mb-6 font-semibold">Jobs</h1>
       <NavigationButtons />
+      <SearchField label="Password" ref={inputRef} searchButtonRef={searchButtonRef} />
       <Collection
         items={items}
         type="list"
