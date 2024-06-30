@@ -1,10 +1,11 @@
 import { useAuth } from "../hooks/useAuth.tsx";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useAuthenticator } from "@aws-amplify/ui-react";
+
 
 export const NavigationButtons = () => {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
+  const { user, signOut } = useAuthenticator((context) => [context.user]);  const navigate = useNavigate();
   const [shouldNavigate, setShouldNavigate] = useState(0);
 
   const handleLogout = () => {
@@ -14,7 +15,9 @@ export const NavigationButtons = () => {
   const handleSecrets = () => {
     setShouldNavigate(1);
   };
-
+  const handleJobs = () => {
+    setShouldNavigate(3);
+  };
   useEffect(() => {
     if (shouldNavigate == 1) {
       navigate("/secret");
@@ -44,11 +47,18 @@ export const NavigationButtons = () => {
         My Secrets
       </button>
       <button
-        onClick={handleLogout}
+        onClick={handleJobs}
+        className="bg-amplify-teal px-5 py-3 rounded-md"
+      >
+        Jobs Page
+      </button>
+      <button
+        onClick={signOut}
         className="bg-amplify-teal px-5 py-3 rounded-md"
       >
         Logout
       </button>
+
     </div>
   );
 };

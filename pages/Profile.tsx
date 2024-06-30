@@ -73,6 +73,8 @@ export const ProfilePage: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [identityId, setIdentityId] = useState<string | null>(null);
 
+
+
   useEffect(() => {
     const fetchIdentityId = async () => {
       try {
@@ -115,7 +117,7 @@ export const ProfilePage: React.FC = () => {
         <h1 className="text-5xl mb-6 font-semibold">Profile</h1>
         <StorageImage
           alt="Profile Picture"
-          path={({ identityId }) =>  `public/${identityId}.jpg`}
+          path={"public/cat.jpg"}
         />
         <input type="file" onChange={handleChange} />
         <button
