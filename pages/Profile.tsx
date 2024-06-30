@@ -95,7 +95,7 @@ export const ProfilePage: React.FC = () => {
     if (file && identityId) {
       try {
         uploadData({
-          path: `picture-submissions/${identityId}`,
+          path: `public/${identityId}`,
           data: file
         });
 
@@ -115,7 +115,7 @@ export const ProfilePage: React.FC = () => {
         <h1 className="text-5xl mb-6 font-semibold">Profile</h1>
         <StorageImage
           alt="Profile Picture"
-          path={({ identityId }) => `picture-submissions/${identityId}`}
+          path={({ identityId }) =>  `public/${identityId}.jpg`}
         />
         <input type="file" onChange={handleChange} />
         <button

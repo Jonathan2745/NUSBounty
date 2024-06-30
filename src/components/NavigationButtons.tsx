@@ -19,6 +19,9 @@ export const NavigationButtons = () => {
     if (shouldNavigate == 1) {
       navigate("/secret");
     }
+    if ( shouldNavigate == 3 ) {
+      navigate("/jobs")
+    }
     if (shouldNavigate == 2) navigate("/profile");
   }, [shouldNavigate, navigate]);
 
