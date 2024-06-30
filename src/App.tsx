@@ -1,6 +1,10 @@
 
-// import { Authenticator } from '@aws-amplify/ui-react'
+import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
+import { Amplify } from 'aws-amplify';
+import outputs from "../amplify_outputs.json"
+
+Amplify.configure(outputs);
 
 // import { useEffect, useState } from "react";
 // import type { Schema } from "../amplify/data/resource";
@@ -35,18 +39,24 @@ function App() {
   // function deleteTodo(id: string) {
   //   client.models.Todo.delete({ id })
   // }
+  // const { route } = useAuthenticator(context => [context.route]);
 
-  return (
-  <AuthProvider>
+  return ( 
+  <Authenticator.Provider>
+    {/* <Authenticator> */}
+    <AuthProvider>
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<LoginPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/home" element={<ProtectedRoute> <HomePage /> </ProtectedRoute>} />
       <Route path="/profile" element={<ProtectedRoute> <ProfilePage /></ProtectedRoute>} />
       <Route path="/secret" element ={<ProtectedRoute> <Secret/> </ProtectedRoute>}/>
     </Routes>
-  </AuthProvider>
+    </AuthProvider>
+    {/* </Authenticator> */}
+  </Authenticator.Provider>
   //   <Authenticator>
-  //     {({ signOut, user }) => (
+  //     {({ signOut, user }) => ( 
   //   <main>
   //     <h1>{user?.signInDetails?.loginId}'s todos</h1>
   //     <h1>My todos</h1>

@@ -6,19 +6,26 @@ import { useNavigate } from "react-router-dom";
 export const ProfilePage = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const [shouldNavigate, setShouldNavigate] = useState(false);
+  const [shouldNavigate, setShouldNavigate] = useState(0);
 
   const handleLogout = () => {
     logout();
   };
 
-  const handleNavigate = () => {
-    setShouldNavigate(true);
+  const handleSecrets = () => {
+    setShouldNavigate(1);
+  };
+
+  const handleHome = () => { 
+    setShouldNavigate(2);
   };
 
   useEffect(() => {
-    if (shouldNavigate) {
+    if (shouldNavigate == 1) {
       navigate("/secret");
+    }
+    if (shouldNavigate == 2) {
+      navigate("/home");
     }
   }, [shouldNavigate, navigate]);
 
@@ -26,7 +33,8 @@ export const ProfilePage = () => {
     <div>
       <h1>This is a Profile page</h1>
       <button onClick={handleLogout}>Logout</button>
-      <button onClick={handleNavigate}>My Secrets</button>
+      <button onClick={handleSecrets}>Secrets</button>
+      <button onClick={handleHome}>Home</button>
     </div>
   );
 };
