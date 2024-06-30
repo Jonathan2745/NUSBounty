@@ -67,6 +67,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { uploadData } from "aws-amplify/storage";
 import { useAuth } from "../src/hooks/useAuth"; // Adjust the path if necessary
+import { StorageImage } from "@aws-amplify/ui-react-storage";
 
 export const ProfilePage: React.FC = () => {
   const { logout } = useAuth();
@@ -118,10 +119,10 @@ export const ProfilePage: React.FC = () => {
     if (file && identityId) {
       try {
         uploadData({
-          path: `picture-submissions/${identityId}/${file.name}`,
+          path: `picture-submissions/${identityId}`,
           data: file
         });
-        
+
         alert("File uploaded successfully!");
       } catch (error) {
         console.error("Error uploading file: ", error);
@@ -135,6 +136,10 @@ export const ProfilePage: React.FC = () => {
   return (
     <div>
       <h1>This is a Profile page</h1>
+      <StorageImage
+      alt="Profile Picture"
+      path={({ identityId }) => `picture-submissions/${identityId}`}
+    />
       <button onClick={handleLogout}>Logout</button>
       <button onClick={handleSecrets}>Secrets</button>
       <button onClick={handleHome}>Home</button>
