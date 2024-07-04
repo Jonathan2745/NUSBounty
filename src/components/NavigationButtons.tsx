@@ -15,12 +15,19 @@ export const NavigationButtons = () => {
   const handleJobs = () => {
     setShouldNavigate(3);
   };
+  const handleHome = () => {
+    setShouldNavigate(4);
+  };
+
   useEffect(() => {
     if (shouldNavigate == 1) {
       navigate("/secret");
     }
     if ( shouldNavigate == 3 ) {
-      navigate("/jobs")
+      navigate("/jobs");
+    }
+    if ( shouldNavigate == 4 ) {
+      navigate("/home");
     }
     if (shouldNavigate == 2) navigate("/profile");
   }, [shouldNavigate, navigate]);
@@ -48,6 +55,12 @@ export const NavigationButtons = () => {
         className="bg-amplify-teal px-5 py-3 rounded-md"
       >
         Jobs Page
+      </button>
+      <button
+        onClick={handleHome}
+        className="bg-amplify-teal px-5 py-3 rounded-md"
+      >
+        Home Page
       </button>
       <button
         onClick={signOut}
