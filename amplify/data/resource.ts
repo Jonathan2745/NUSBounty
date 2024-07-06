@@ -7,20 +7,31 @@ specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
-  // Post: a.model({
-  //     content: a.string(),
-  //     isDone: a.boolean(),
-  //     DateCreated: a.datetime(),
-  //     createdBy: a.string(),
-  //     pusblished: a.string(),
-  //   })
-  //   .authorization((allow) => [allow.owner()]),
+  Post: a.model({
+      content: a.string(),
+      isDone: a.boolean(),
+      numBooked: a.integer(),
+      numberOfPax: a.integer(),
+      bounty: a.integer(),
+      DateCreated: a.datetime(),
+      createdBy: a.string(),
+      publishedBy: a.string(),
+      duration: a.integer(),
+      timeStart: a.time(),
+      timeEnd: a.time(),
+    })
+    .authorization((allow) => [allow.publicApiKey()]),
 
-  // Wallet: a.model({
-  //   balance: a.integer(),
-  //   user: a.string(),
-  // })
-  // .authorization((allow) => [allow.owner()]),
+  User: a.model({
+    userId: a.string(),
+    username: a.string(),
+    email: a.email(),
+    phoneNumber: a.phone(),
+    walletBalance: a.integer(),
+    bankName: a.string(),
+    bankNumber: a.integer(),
+  })
+  .authorization((allow) => [allow.owner()]),
 
   Todo: a.model({
       content: a.string(),
