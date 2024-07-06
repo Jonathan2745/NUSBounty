@@ -3,22 +3,20 @@ import { Button } from "@aws-amplify/ui-react";
 import { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import { useState, useEffect } from "react";
-import { Authenticator } from '@aws-amplify/ui-react';
-
 
 
 export const Secret = () => {
   const client = generateClient<Schema>();
-  const [wallet, setBalance] = useState<Schema["Wallet"]["type"][]>([]);
+  const [wallet, setBalance] = useState<Schema["User"]["type"][]>([]);
 
   const changeBalance = async () => {
-    await client.models.Wallet.create({
-      balance: 20,
+    await client.models.User.create({
+      walletBalance: 20,
     })
   };
 
   useEffect(() => {
-    const sub = client.models.Wallet.observeQuery().subscribe({
+    const sub = client.models.User.observeQuery().subscribe({
       next:({ items }) => {
         setBalance([...items]);
       },
@@ -34,8 +32,8 @@ export const Secret = () => {
       <h2> wallet balance: 0</h2>
       <button onClick={changeBalance}> Test Balance </button>
       <ul>
-       {wallet.map(({id, balance }) => (
-          <li key={id}>{balance}</li>
+       {wallet.map(({id, walletBalance }) => (
+          <li key={id}>{walletBalance}</li>
         ))}
       </ul>
       <Button loadingText="" onClick={() => alert('Not Implemented Yet~! ')}> Click me! </Button>
