@@ -16,6 +16,7 @@ import { HomePage } from "../pages/Home.tsx";
 import { Secret } from "../pages/Secret.tsx";
 import { ProfilePage } from "../pages/Profile.tsx";
 import { JobPage } from "../pages/Jobs.tsx";
+import { NewJobPage } from "../pages/NewJob.tsx";
 
 
 import "./App.css";
@@ -53,6 +54,8 @@ function App() {
       <Route path="/profile" element={<ProtectedRoute> <ProfilePage /></ProtectedRoute>} />
       <Route path="/secret" element ={<ProtectedRoute> <Secret/> </ProtectedRoute>}/>
       <Route path="/jobs" element ={<ProtectedRoute> <JobPage/> </ProtectedRoute>}/>
+      <Route path="/jobs/new" element ={<ProtectedRoute> <NewJobPage/> </ProtectedRoute>}/>
+
     </Routes>
     </AuthProvider>
     {/* </Authenticator> */}

@@ -1,13 +1,43 @@
 import { NavigationButtons } from "../src/components/NavigationButtons";
-import { Collection, Card, Heading, View, Badge, Flex, Divider, Button } from '@aws-amplify/ui-react';
+import { useNavigate } from "react-router-dom";
+
+import { Collection, Card, Heading, View, Divider, Button } from '@aws-amplify/ui-react';
 import { StorageImage } from "@aws-amplify/ui-react-storage";
 import { SearchField } from "@aws-amplify/ui-react";
 import * as React from 'react';
 
+import { generateClient } from 'aws-amplify/data';
+import { type Schema } from '../amplify/data/resource';
+import { useState, useEffect } from 'react';
+
+
+const client = generateClient<Schema>();
+
+
+
 
 export const JobPage = () => {
+  
+  interface Jobs {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    title?: string | null; // Adjusted to allow for null values
+    content?: string | null; // Adjusted to allow for null values
+    numBooked?: number | null; // Adjusted to allow for null values
+    numberOfPax?: number | null; // Adjusted to allow for null values
+    bounty?: number | null; // Adjusted to allow for null values
+    DateCreated?: string | null; // Adjusted to allow for null values
+    createdBy?: string | null; // Adjusted to allow for null values
+    duration?: number | null; // Adjusted to allow for null values
+    timeStart?: string | null; // Adjusted to allow for null values
+    timeEnd?: string | null; // Adjusted to allow for null values
+  }
+
+
     const inputRef = React.useRef<HTMLInputElement | null>(null);
     const searchButtonRef = React.useRef<HTMLButtonElement | null>(null);
+    const navigate = useNavigate();
   
     const onClick = React.useCallback(() => {
       if( inputRef.current ){
@@ -29,28 +59,59 @@ export const JobPage = () => {
       }
     }, [onClick]);
 
-    const items = [
-        {
-          title: 'Test Job #1',
-          badges: ['High Pay', 'Verified'],
-        },
-        {
-          title: 'Test Job #2',
-          badges: ['Low Commitment', 'Verified'],
-        },
-      ];
+
+      const [Jobs, setPosts] = useState<Jobs[]>([]);
+        
+      useEffect(() => {
+        const fetchPosts = async () => {
+          try { 
+            const { data: fetchedJobs } = await client.models.Jobs.list();
+            setPosts(fetchedJobs);
+          } catch (error) {
+            console.error('Error fetching posts: ', error);
+          }
+        
+        };
+      
+        fetchPosts();
+      }, []);
+
+      
+
+
+    // const items = [
+    //     {
+    //       title: 'Test Job #1',
+    //       badges: ['High Pay', 'Verified'],
+    //     },
+    //     {
+    //       title: 'Test Job #2',
+    //       badges: ['Low Commitment', 'Verified'],
+    //     },
+    //   ];
       
     const handleClick = () => {
         alert("Not Implemented Yet!");
       };
 
+    const handleNewJobs = () => {
+      navigate("/jobs/new");
+    }
+
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <h1 className="text-5xl mb-6 font-semibold">Jobs</h1>
       <NavigationButtons />
+      <button
+        onClick={handleNewJobs}
+        className="bg-amplify-teal px-5 py-3 rounded-md"
+      >
+        New Job
+      </button>
       <SearchField label="Password" ref={inputRef} searchButtonRef={searchButtonRef} />
       <Collection
-        items={items}
+        items={Jobs}
         type="list"
         direction="row"
         gap="20px"
@@ -68,7 +129,7 @@ export const JobPage = () => {
               alt ="Glittering stream with old log, snowy mountain peaks tower over a green field."
             />
             <View padding="xs">
-              <Flex>
+              {/* <Flex>
                 {item.badges.map((badge) => (
                   <Badge
                     key={badge}
@@ -79,7 +140,7 @@ export const JobPage = () => {
                     {badge}
                   </Badge>
                 ))}
-              </Flex>
+              </Flex> */}
               <Divider padding="xs" />
               <Heading padding="medium">{item.title}</Heading>
               <Button variation="primary" isFullWidth onClick={handleClick}>
@@ -89,6 +150,7 @@ export const JobPage = () => {
           </Card>
         )}
       </Collection>
+
 
     </div>
   );

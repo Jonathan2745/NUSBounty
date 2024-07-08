@@ -4,7 +4,8 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 
 
 export const NavigationButtons = () => {
-  const { signOut } = useAuthenticator((context) => [context.user]);  const navigate = useNavigate();
+  const { signOut } = useAuthenticator((context) => [context.user]);  
+  const navigate = useNavigate();
   const [shouldNavigate, setShouldNavigate] = useState(0);
 
 
@@ -26,6 +27,7 @@ export const NavigationButtons = () => {
     if ( shouldNavigate == 3 ) {
       navigate("/jobs");
     }
+
     if ( shouldNavigate == 4 ) {
       navigate("/home");
     }
