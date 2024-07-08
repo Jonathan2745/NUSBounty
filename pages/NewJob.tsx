@@ -10,6 +10,7 @@ const client = generateClient<Schema>();
 
 // Define the FormData interface
 interface FormData {
+  title: string;
   content: string;
   numBooked: number;
   bounty: number;
@@ -54,6 +55,7 @@ export const NewJobPage = () => {
 
     try {
       const { errors, data: newJob } = await client.models.Jobs.create({
+        title: formData.content,
         content: formData.content,
         isDone: false,
         numBooked: formData.numBooked,
@@ -76,6 +78,10 @@ export const NewJobPage = () => {
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
+      <div>
+          <label>Title:</label>
+          <input {...register('title')} required />
+        </div>
         <div>
           <label>Content:</label>
           <input {...register('content')} required />

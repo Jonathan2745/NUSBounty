@@ -126,7 +126,9 @@ export const JobPage = () => {
           >
             <StorageImage
               path = "public/cat.jpg"
-              alt ="Glittering stream with old log, snowy mountain peaks tower over a green field."
+              alt="Cat"
+              width="100px"
+              height="auto"
             />
             <View padding="xs">
               {/* <Flex>
@@ -150,8 +152,20 @@ export const JobPage = () => {
           </Card>
         )}
       </Collection>
-
-
+      <ul className="divide-y divide-gray-200">
+        {Jobs.map(job => (
+          <li key={job.id} className="py-4">
+            <div className="flex space-x-3">
+              <div className="flex-1 space-y-1">
+                <h3 className="text-lg font-medium text-gray-900">{job.title}</h3>
+                <p className="text-gray-500">{job.content}</p>
+                <p className="text-sm text-gray-500">Created by: {job.createdBy}</p>
+                {/* Add more job details as needed */}
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
