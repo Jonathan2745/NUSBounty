@@ -1,5 +1,5 @@
 import { NavigationButtons } from "../src/components/NavigationButtons";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { generateClient } from 'aws-amplify/data';
 import { type Schema } from '../amplify/data/resource';
 import { useForm } from 'react-hook-form';
@@ -43,9 +43,36 @@ export const NewJobPage = () => {
   const navigate = useNavigate();
 
 
-  const { register, handleSubmit } = useForm<FormData>();
+  const { register, handleSubmit, watch, setValue } = useForm<FormData>();
   const [newJob, setNewJob] = useState<NewJob | null>(null);
   const [errors, setErrors] = useState<any>(null);
+
+  const timeStart = watch('timeStart');
+  const timeEnd = watch('timeEnd');
+
+  useEffect(() => {
+    const updateDuration = () => {
+    if (timeStart && timeEnd) {
+      const startTime = new Date(`1970-01-01T${timeStart}:00`);
+      const endTime = new Date(`1970-01-01T${timeEnd}:00`);
+
+      let diff = (endTime.getTime() - startTime.getTime()) / 1000;
+
+      if (diff < 0) {
+        diff += 24*60*60; // adjust for times past midnight
+      }
+
+      const hours = Math.floor(diff / 3600 );
+      const minutes = Math.floor((diff % 3600) / 60);
+      const duration = hours + minutes/60;
+
+      setValue('duration', duration);
+    }
+  };
+  
+    updateDuration();
+  },[timeStart, timeEnd, setValue]);
+
 
   const onSubmit = async (formData: FormData) => {
     if (authStatus !== 'authenticated') {
@@ -94,10 +121,7 @@ export const NewJobPage = () => {
           <label>Bounty:</label>
           <input {...register('bounty', { valueAsNumber: true })} type="number" required />
         </div>
-        <div>
-          <label>Duration:</label>
-          <input {...register('duration', { valueAsNumber: true })} type="number" required />
-        </div>
+
         <div>
           <label>Start Time:</label>
           <input {...register('timeStart')} type="time" required />
@@ -105,6 +129,11 @@ export const NewJobPage = () => {
         <div>
           <label>End Time:</label>
           <input {...register('timeEnd')} type="time" required />
+        </div>
+        <div>
+          <label>Duration:</label>
+          <input {...register('duration', { valueAsNumber: true })} type="number" readOnly />
+          <label> Hours </label>
         </div>
         <button type="submit">Create Post</button>
 
