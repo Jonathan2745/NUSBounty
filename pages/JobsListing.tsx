@@ -159,7 +159,7 @@ export const JobPage = () => {
               <div className="flex-1 space-y-1">
                 <h3 className="text-lg font-medium text-gray-900">{job.title}</h3>
                 <p className="text-gray-500">{job.content}</p>
-                <p className="text-gray-500">{job.bounty}</p>
+                <p className="text-gray-500">Bounty: ${job.bounty}</p>
                 <p className="text-sm text-gray-500">Start Time: {job.timeStart}</p>
                 <p className="text-sm text-gray-500">End Time: {job.timeEnd}</p>
                 <p className="text-sm text-gray-500">Created by: {job.createdBy}</p>

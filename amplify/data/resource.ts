@@ -16,7 +16,7 @@ const schema = a.schema({
       bounty: a.integer(),
       DateCreated: a.datetime(),
       createdBy: a.string(),
-      publishedBy: a.string(),
+      acceptedBy: a.string(),
       duration: a.integer(),
       timeStart: a.time(),
       timeEnd: a.time(),

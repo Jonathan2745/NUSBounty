@@ -15,7 +15,7 @@ import { LoginPage } from "../pages/Login.tsx";
 import { HomePage } from "../pages/Home.tsx";
 import { Secret } from "../pages/Secret.tsx";
 import { ProfilePage } from "../pages/Profile.tsx";
-import { JobPage } from "../pages/Jobs.tsx";
+import { JobPage } from "../pages/JobsListing.tsx";
 import { NewJobPage } from "../pages/NewJob.tsx";
 
 
