@@ -66,6 +66,7 @@ export const JobPage = () => {
         const fetchPosts = async () => {
           try { 
             const { data: fetchedJobs } = await client.models.Jobs.list();
+            fetchedJobs.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
             setPosts(fetchedJobs);
           } catch (error) {
             console.error('Error fetching posts: ', error);
@@ -100,29 +101,35 @@ export const JobPage = () => {
 
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-center h-screen overflow-y-auto">
       <h1 className="text-5xl mb-6 font-semibold">Jobs</h1>
       <NavigationButtons />
       <button
         onClick={handleNewJobs}
-        className="bg-amplify-teal px-5 py-3 rounded-md"
+        className="bg-amplify-teal px-5 py-3 rounded-md mb-4"
       >
         New Job
       </button>
-      <SearchField label="Password" ref={inputRef} searchButtonRef={searchButtonRef} />
+      <h1 className="text-5xl mb-6 font-semibold"> Latest Jobs</h1>
       <Collection
-        items={Jobs}
+        items={Jobs.slice(0,5)}
         type="list"
         direction="row"
         gap="20px"
         wrap="nowrap"
+        margin = "20px"
       >
         {(item, index) => (
           <Card
             key={index}
             borderRadius="medium"
-            maxWidth="20rem"
+            minWidth="12rem"
+            maxWidth="12rem"
+            minHeight="16rem"
+            maxHeight="16rem"
             variation="outlined"
+            className="relative"
+
           >
             <StorageImage
               path = "public/cat.jpg"
@@ -145,14 +152,19 @@ export const JobPage = () => {
               </Flex> */}
               <Divider padding="xs" />
               <Heading padding="medium">{item.title}</Heading>
-              <Button variation="primary" isFullWidth onClick={handleClick}>
+
+              <label> {item.content} </label>
+              <Divider padding= "s" />
+              <Button variation="primary" width="10rem"  onClick={handleClick} className="absolute bottom-16 left-4 right-0" style={{ bottom: '4px' }}>
                 Book it
               </Button>
             </View>
           </Card>
         )}
       </Collection>
-      <ul className="divide-y divide-gray-200">
+      <h1 className="text-5xl mb-6 font-semibold"> Find your bounty !</h1>
+      <SearchField label="Password" ref={inputRef} searchButtonRef={searchButtonRef} className="mb-4" />
+      <ul className="divide-y divide-gray-200 w-full px-4">
         {Jobs.map(job => (
           <li key={job.id} className="py-4">
             <div className="flex space-x-3">

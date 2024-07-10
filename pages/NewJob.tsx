@@ -46,6 +46,7 @@ export const NewJobPage = () => {
   const { register, handleSubmit, watch, setValue } = useForm<FormData>();
   const [newJob, setNewJob] = useState<NewJob | null>(null);
   const [errors, setErrors] = useState<any>(null);
+  const [jobDuration, setDuration] = useState<any>(null);
 
   const timeStart = watch('timeStart');
   const timeEnd = watch('timeEnd');
@@ -64,9 +65,10 @@ export const NewJobPage = () => {
 
       const hours = Math.floor(diff / 3600 );
       const minutes = Math.floor((diff % 3600) / 60);
-      const duration = hours + minutes/60;
+      const duration = hours*60 + minutes;
 
       setValue('duration', duration);
+      setDuration(duration);
     }
   };
   
@@ -90,7 +92,7 @@ export const NewJobPage = () => {
         bounty: formData.bounty,
         DateCreated: new Date().toISOString(),
         createdBy: user.username, 
-        duration: formData.duration,
+        duration: jobDuration,
         timeStart: formData.timeStart,
         timeEnd: formData.timeEnd,
       });
@@ -132,8 +134,7 @@ export const NewJobPage = () => {
         </div>
         <div>
           <label>Duration:</label>
-          <input {...register('duration', { valueAsNumber: true })} type="number" readOnly />
-          <label> Hours </label>
+          <span>{jobDuration} Minutes</span>
         </div>
         <button type="submit">Create Post</button>
 
