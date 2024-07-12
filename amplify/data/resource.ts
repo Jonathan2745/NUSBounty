@@ -8,6 +8,7 @@ specifies that any user authenticated via an API key can "create", "read",
 =========================================================================*/
 const schema = a.schema({
   Jobs: a.model({
+      jobId: a.string(),
       title: a.string(),
       content: a.string(),
       isDone: a.boolean(),
@@ -16,12 +17,12 @@ const schema = a.schema({
       bounty: a.integer(),
       DateCreated: a.datetime(),
       createdBy: a.string(),
-      acceptedBy: a.json(),
       duration: a.integer(),
       timeStart: a.time(),
       timeEnd: a.time(),
+      DateStart: a.date(),
     })
-    .authorization((allow) => [allow.owner()]),
+    .authorization((allow) => [allow.publicApiKey()]),
 
   User: a.model({
     userId: a.string(),
@@ -31,6 +32,7 @@ const schema = a.schema({
     walletBalance: a.integer(),
     bankName: a.string(),
     bankNumber: a.integer(),
+    acceptedJobs: a.json(),
   })
   .authorization((allow) => [allow.owner()]),
 

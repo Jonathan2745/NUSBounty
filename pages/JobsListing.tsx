@@ -32,6 +32,7 @@ export const JobPage = () => {
     duration?: number | null; // Adjusted to allow for null values
     timeStart?: string | null; // Adjusted to allow for null values
     timeEnd?: string | null; // Adjusted to allow for null values
+    DateStart?: string | null;
   }
 
 
@@ -152,8 +153,10 @@ export const JobPage = () => {
               </Flex> */}
               <Divider padding="xs" />
               <Heading padding="medium">{item.title}</Heading>
-
-              <label> {item.content} </label>
+              <p className="text-sm text-gray-500">Date: {item.DateStart}</p>
+              <p className="text-gray-500">Bounty: ${item.bounty}</p>
+              <p className="text-sm text-gray-500">Start Time: {item.timeStart}</p>
+              <p className="text-sm text-gray-500">End Time: {item.timeEnd}</p>
               <Divider padding= "s" />
               <Button variation="primary" width="10rem"  onClick={handleClick} className="absolute bottom-16 left-4 right-0" style={{ bottom: '4px' }}>
                 Book it

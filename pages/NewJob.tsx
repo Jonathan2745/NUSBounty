@@ -17,6 +17,7 @@ interface FormData {
   duration: number;
   timeStart: string; 
   timeEnd: string;
+  DateStart: string;
 }
 
 // Define the type for the new job response
@@ -34,6 +35,7 @@ interface NewJob {
   duration?: number | null; // Adjusted to allow for null values
   timeStart?: string | null; // Adjusted to allow for null values
   timeEnd?: string | null; // Adjusted to allow for null values
+  DateStart?: string | null;
 }
 
 export const NewJobPage = () => {
@@ -95,6 +97,7 @@ export const NewJobPage = () => {
         duration: jobDuration,
         timeStart: formData.timeStart,
         timeEnd: formData.timeEnd,
+        DateStart: formData.DateStart,
       });
       setNewJob(newJob);
       setErrors(errors);
@@ -122,6 +125,11 @@ export const NewJobPage = () => {
         <div>
           <label>Bounty:</label>
           <input {...register('bounty', { valueAsNumber: true })} type="number" required />
+        </div>
+
+        <div>
+          <label>Date:</label>
+          <input {...register('DateStart')} type="date" required />
         </div>
 
         <div>
