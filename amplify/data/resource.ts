@@ -21,19 +21,21 @@ const schema = a.schema({
       timeStart: a.time(),
       timeEnd: a.time(),
       DateStart: a.date(),
+      completed: a.boolean(),
     })
     .authorization((allow) => [allow.authenticated()]),
 
   User: a.model({
-    userId: a.string(),
+    userId: a.id().required(),
     username: a.string(),
     email: a.email(),
     phoneNumber: a.phone(),
-    walletBalance: a.integer(),
+    walletBalance: a.integer().required(),
     bankName: a.string(),
     bankNumber: a.integer(),
     acceptedJobs: a.json(),
   })
+  .identifier(['userId'])
   .authorization((allow) => [allow.owner()]),
 
   Todo: a.model({

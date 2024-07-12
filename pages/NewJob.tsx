@@ -8,11 +8,26 @@ import { useNavigate } from "react-router-dom";
 
 const client = generateClient<Schema>();
 
+// Create unique IDs for Jobs //
+function makeid(length:number) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let counter = 0;
+
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
+
+
 // Define the FormData interface
 interface FormData {
   title: string;
   content: string;
-  numBooked: number;
+  numberOfPax: number;
   bounty: number;
   duration: number;
   timeStart: string; 
@@ -22,11 +37,10 @@ interface FormData {
 
 // Define the type for the new job response
 interface NewJob {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
+  jobId?: string | null;
   title?: string | null; // Adjusted to allow for null values
   content?: string | null; // Adjusted to allow for null values
+  isDone? : boolean | null;
   numBooked?: number | null; // Adjusted to allow for null values
   numberOfPax?: number | null; // Adjusted to allow for null values
   bounty?: number | null; // Adjusted to allow for null values
@@ -36,6 +50,7 @@ interface NewJob {
   timeStart?: string | null; // Adjusted to allow for null values
   timeEnd?: string | null; // Adjusted to allow for null values
   DateStart?: string | null;
+  completed?: boolean | null;
 }
 
 export const NewJobPage = () => {
@@ -85,12 +100,14 @@ export const NewJobPage = () => {
     }
 
     try {
+      const createdId:string = makeid(16);
       const { errors, data: newJob } = await client.models.Jobs.create({
+        jobId: createdId,
         title: formData.content,
         content: formData.content,
         isDone: false,
-        numBooked: formData.numBooked,
-        numberOfPax: 0,
+        numBooked: 0,
+        numberOfPax: formData.numberOfPax,
         bounty: formData.bounty,
         DateCreated: new Date().toISOString(),
         createdBy: user.username, 
@@ -98,6 +115,7 @@ export const NewJobPage = () => {
         timeStart: formData.timeStart,
         timeEnd: formData.timeEnd,
         DateStart: formData.DateStart,
+        completed: false,
       });
       setNewJob(newJob);
       setErrors(errors);
@@ -120,7 +138,7 @@ export const NewJobPage = () => {
         </div>
         <div>
           <label>Number of Pax Required:</label>
-          <input {...register('numBooked', { valueAsNumber: true })} type="number" required />
+          <input {...register('numberOfPax', { valueAsNumber: true })} type="number" required />
         </div>
         <div>
           <label>Bounty:</label>

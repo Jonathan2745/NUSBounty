@@ -119,7 +119,7 @@ export const JobPage = () => {
         gap="20px"
         wrap="nowrap"
         margin = "20px"
-      >
+        >
         {(item, index) => (
           <Card
             key={index}
@@ -175,10 +175,14 @@ export const JobPage = () => {
                 <h3 className="text-lg font-medium text-gray-900">{job.title}</h3>
                 <p className="text-gray-500">{job.content}</p>
                 <p className="text-gray-500">Bounty: ${job.bounty}</p>
+                <p className="text-gray-500">Date: {job.DateStart}</p>
                 <p className="text-sm text-gray-500">Start Time: {job.timeStart}</p>
                 <p className="text-sm text-gray-500">End Time: {job.timeEnd}</p>
                 <p className="text-sm text-gray-500">Created by: {job.createdBy}</p>
                 {/* Add more job details as needed */}
+                <Button variation="primary" width="10rem"  onClick={handleClick} className="right-0" style={{ bottom: '4px' }}>
+                Book it
+                </Button>
               </div>
             </div>
           </li>
