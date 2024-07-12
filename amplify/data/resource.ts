@@ -22,7 +22,7 @@ const schema = a.schema({
       timeEnd: a.time(),
       DateStart: a.date(),
     })
-    .authorization((allow) => [allow.publicApiKey()]),
+    .authorization((allow) => [allow.authenticated()]),
 
   User: a.model({
     userId: a.string(),
