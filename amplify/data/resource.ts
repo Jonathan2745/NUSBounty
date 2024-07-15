@@ -30,10 +30,10 @@ const schema = a.schema({
     username: a.string(),
     email: a.email(),
     phoneNumber: a.phone(),
-    walletBalance: a.integer().required(),
+    walletBalance: a.integer(),
     bankName: a.string(),
     bankNumber: a.integer(),
-    acceptedJobs: a.json(),
+    acceptedJobs: a.id().array(),
   })
   .identifier(['userId'])
   .authorization((allow) => [allow.owner()]),

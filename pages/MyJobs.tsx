@@ -22,7 +22,6 @@ export const MyJobsPage = () => {
     const [acceptedBounty, setAcceptedBounty] = useState<Bounty[]>([]);
     const [postedBounty, setPostedBounty] = useState<Bounty[]>([]);
     const [numberBooked, setNumberBooked] = useState<number>(-1);
-
     // Deletion of Bounty // 
     
     const deleteBounty = async(bountyId:string) => {

@@ -10,11 +10,7 @@ import { generateClient } from 'aws-amplify/data';
 import { type Schema } from '../amplify/data/resource';
 import { useState, useEffect } from 'react';
 
-
 const client = generateClient<Schema>();
-
-
-
 
 export const JobPage = () => {
   
@@ -34,7 +30,6 @@ export const JobPage = () => {
     timeEnd?: string | null; // Adjusted to allow for null values
     DateStart?: string | null;
   }
-
 
     const inputRef = React.useRef<HTMLInputElement | null>(null);
     const searchButtonRef = React.useRef<HTMLButtonElement | null>(null);
@@ -61,43 +56,30 @@ export const JobPage = () => {
     }, [onClick]);
 
 
-      const [Jobs, setPosts] = useState<Jobs[]>([]);
-        
-      useEffect(() => {
-        const fetchPosts = async () => {
-          try { 
-            const { data: fetchedJobs } = await client.models.Jobs.list();
-            fetchedJobs.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-            setPosts(fetchedJobs);
-          } catch (error) {
-            console.error('Error fetching posts: ', error);
-          }
-        
-        };
+    const [Jobs, setPosts] = useState<Jobs[]>([]);
       
-        fetchPosts();
-      }, []);
-
+    useEffect(() => {
+      const fetchPosts = async () => {
+        try { 
+          const { data: fetchedJobs } = await client.models.Jobs.list();
+          fetchedJobs.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+          setPosts(fetchedJobs);
+        } catch (error) {
+          console.error('Error fetching posts: ', error);
+        }
       
-
-
-    // const items = [
-    //     {
-    //       title: 'Test Job #1',
-    //       badges: ['High Pay', 'Verified'],
-    //     },
-    //     {
-    //       title: 'Test Job #2',
-    //       badges: ['Low Commitment', 'Verified'],
-    //     },
-    //   ];
-      
-    const handleClick = () => {
-        alert("Not Implemented Yet!");
       };
+    
+      fetchPosts();
+    }, []);
+
+
+    const navigateToJobDetils = (jobId:string) => {
+        navigate(`/jobs/${jobId}`);
+    };
 
     const handleNewJobs = () => {
-      navigate("/jobs/new");
+      navigate("/newjob");
     }
 
 
@@ -136,9 +118,9 @@ export const JobPage = () => {
               path = "public/cat.jpg"
               alt="Cat"
               width="100px"
-              height="auto"
+              height="100px"
             />
-            <View padding="xs">
+            <View padding="s">
               {/* <Flex>
                 {item.badges.map((badge) => (
                   <Badge
@@ -158,7 +140,7 @@ export const JobPage = () => {
               <p className="text-sm text-gray-500">Start Time: {item.timeStart}</p>
               <p className="text-sm text-gray-500">End Time: {item.timeEnd}</p>
               <Divider padding= "s" />
-              <Button variation="primary" width="10rem"  onClick={handleClick} className="absolute bottom-16 left-4 right-0" style={{ bottom: '4px' }}>
+              <Button variation="primary" width="10rem"  onClick={() =>navigateToJobDetils(item.id)} className="absolute bottom-16 left-4 right-0" style={{ bottom: '4px' }}>
                 Book it
               </Button>
             </View>
@@ -180,7 +162,7 @@ export const JobPage = () => {
                 <p className="text-sm text-gray-500">End Time: {job.timeEnd}</p>
                 <p className="text-sm text-gray-500">Created by: {job.createdBy}</p>
                 {/* Add more job details as needed */}
-                <Button variation="primary" width="10rem"  onClick={handleClick} className="right-0" style={{ bottom: '4px' }}>
+                <Button variation="primary" width="10rem"  onClick={() =>navigateToJobDetils(job.id)} className="right-0" style={{ bottom: '4px' }}>
                 Book it
                 </Button>
               </div>

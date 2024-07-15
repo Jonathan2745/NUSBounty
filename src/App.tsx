@@ -14,7 +14,7 @@ import { ProfilePage } from "../pages/Profile.tsx";
 import { JobPage } from "../pages/JobsListing.tsx";
 import { NewJobPage } from "../pages/NewJob.tsx";
 import { MyJobsPage } from "../pages/MyJobs.tsx";
-
+import { JobDetailsPage } from "../pages/JobDetails.tsx"
 
 import "./App.css";
 import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
@@ -36,8 +36,10 @@ function App() {
       <Route path="/profile" element={<ProtectedRoute> <ProfilePage /></ProtectedRoute>} />
       <Route path="/secret" element ={<ProtectedRoute> <Secret/> </ProtectedRoute>}/>
       <Route path="/jobs" element ={<ProtectedRoute> <JobPage/> </ProtectedRoute>}/>
-      <Route path="/jobs/new" element ={<ProtectedRoute> <NewJobPage/> </ProtectedRoute>}/>
+      <Route path="/newjob" element ={<ProtectedRoute> <NewJobPage/> </ProtectedRoute>}/>
+      <Route path="/jobs/:jobId" element ={<ProtectedRoute> <JobDetailsPage/> </ProtectedRoute>}/>
       <Route path="/myjobs" element ={<ProtectedRoute> <MyJobsPage/> </ProtectedRoute>}/>
+  
 
     </Routes>
     </AuthProvider>
