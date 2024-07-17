@@ -45,7 +45,7 @@ export const NavigationButtons = () => {
   };
 
   return (
-    <div className="flex space-x-4 m-3 text-white text-lg font-bold">
+    <div className="flex gap-3 m-3 text-white text-lg font-bold flex-wrap justify-center">
       <button
         onClick={handleProfile}
         className="bg-amplify-teal px-5 py-3 rounded-md"
