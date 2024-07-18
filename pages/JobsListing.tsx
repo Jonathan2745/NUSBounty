@@ -93,7 +93,7 @@ export const JobPage = () => {
       >
         New Job
       </button>
-      <h1 className="text-5xl mb-6 font-semibold"> Latest Jobs</h1>
+      <h1 className="text-5xl mb-6 font-semibold"> Latest Jobs </h1>
       <Collection
         items={Jobs.slice(0,5)}
         type="list"

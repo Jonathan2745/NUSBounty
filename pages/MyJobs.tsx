@@ -38,6 +38,8 @@ export const MyJobsPage = () => {
         } catch (error) {
             console.error('Error deleting job:', error);
         }
+        fetchPostedBounties();
+        fetchTakenBounties();
     };
 
     // Completion of Bounty //
@@ -56,6 +58,8 @@ export const MyJobsPage = () => {
         } catch (error) {
             console.error('Error deleting job:', error);
         }
+        fetchPostedBounties();
+        fetchTakenBounties();
     };
 
     // Cancellation of Bounty //
@@ -82,6 +86,9 @@ export const MyJobsPage = () => {
         } catch (error) {
             console.error('Error deleting job:', error);
         }
+        fetchPostedBounties();
+        fetchTakenBounties();
+
     }
 
 

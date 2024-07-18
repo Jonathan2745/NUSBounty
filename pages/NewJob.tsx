@@ -63,6 +63,35 @@ export const NewJobPage = () => {
   const [newJob, setNewJob] = useState<NewJob | null>(null);
   const [errors, setErrors] = useState<any>(null);
   const [jobDuration, setDuration] = useState<any>(null);
+  
+  type User = Schema['User']['type'];
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  
+
+
+  const fetchCurrentUser = async () => {
+    if (user) {
+        const { data: currentuser, errors } = await client.models.User.get({
+            userId: user.userId,
+        })
+        if ( errors ){
+            console.error("User not found");
+        } else {
+            try{ 
+                setCurrentUser(currentuser);
+            } catch (error) {
+                console.error("errror setting curent user", error);
+            }
+        }
+    } else {
+        console.error("No user found");
+    }
+  }
+  
+  useEffect(() => {
+    fetchCurrentUser();
+  }, []);
+  
 
   const timeStart = watch("timeStart");
   const timeEnd = watch("timeEnd");
@@ -98,10 +127,42 @@ export const NewJobPage = () => {
     }
 
     try {
+      if ( currentUser?.walletBalance ){
+        const updatedBalance = currentUser?.walletBalance - (formData.bounty * formData.numberOfPax);
+        if ( updatedBalance < 0 ){
+          alert("User has Insufficent Balance to perform this booking");
+          return;
+        } else {
+          const updatedUser = {
+            userId : currentUser.userId,
+            walletBalance: updatedBalance,
+          };
+          console.log("Original Balance: ", currentUser.walletBalance);
+          console.log("Updated Balance: ", updatedBalance);
+          console.log("Current User: ", user.userId);
+          try {
+            const { data: updatedUsers } = await client.models.User.update(updatedUser);
+            console.log("Updated users wallet: ", updatedUser);
+            setCurrentUser(updatedUsers);
+          } catch (error) {
+            console.error("Error updating user", error);
+          }
+        }
+      } else {
+        prompt("Error: User not logged in or has not initialised wallet.");
+        return;
+      }
+    } catch (error) {
+      console.error("Error updating user", error);
+      return;
+    }
+    
+
+    try {
       const createdId: string = makeid(16);
       const { errors, data: newJob } = await client.models.Jobs.create({
         jobId: createdId,
-        title: formData.content,
+        title: formData.title,
         content: formData.content,
         isDone: false,
         numBooked: 0,
@@ -159,7 +220,7 @@ export const NewJobPage = () => {
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <Label>Bounty:</Label>
+                <Label>Bounty per pax:</Label>
                 <Input
                   placeholder="Bounty"
                   {...register("bounty", { valueAsNumber: true })}
