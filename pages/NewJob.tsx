@@ -1,4 +1,4 @@
-import { Card, useAuthenticator } from "@aws-amplify/ui-react";
+import { Button, Flex, Input, Label, useAuthenticator } from "@aws-amplify/ui-react";
 import { generateClient } from "aws-amplify/data";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -126,81 +126,73 @@ export const NewJobPage = () => {
   return (
     <div className="m-5 flex flex-col">
       <div className="flex flex-col items-center justify-center m-5">
-        <Card
-          key="1"
-          borderRadius="medium"
-          variation="outlined"
-          className="flex flex-col items-center justify-center"
-        >
+        <Flex>
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-2"
           >
             <div className="flex flex-col gap-1">
-              <label>Title:</label>
-              <input
-                className="border-2 border-gray-400 rounded text-center"
+              <Label>Title:</Label>
+              <Input
+                className=""
                 placeholder="Title"
                 {...register("title")}
-                required
+                isRequired
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label>Content:</label>
-              <textarea
-                className="border-2 border-gray-400 rounded text-center"
+              <Label>Content:</Label>
+              <Input
                 placeholder="Content"
                 {...register("content")}
-                required
+                isRequired
               />
             </div>
             <div className="flex flex-row gap-4 justify-center">
               <div className="flex flex-col gap-1">
-                <label>Number of Pax Required:</label>
-                <input
-                  className="border-2 border-gray-400 rounded text-center"
+                <Label>Number of Pax Required:</Label>
+                <Input
                   placeholder="Number of Pax"
                   {...register("numberOfPax", { valueAsNumber: true })}
                   type="number"
-                  required
+                  isRequired
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <label>Bounty:</label>
-                <input
-                  className="border-2 border-gray-400 rounded text-center"
+                <Label>Bounty:</Label>
+                <Input
                   placeholder="Bounty"
                   {...register("bounty", { valueAsNumber: true })}
                   type="number"
-                  required
+                  isRequired
                 />
               </div>
             </div>
             <div>
-              <label>Date:</label>
-              <input {...register("DateStart")} type="date" required />
+              <Label>Date:</Label>
+              <Input {...register("DateStart")} type="date" isRequired />
             </div>
 
             <div className="flex flex-row gap-4 justify-center">
-              <div>
-                <label>Start Time:</label>
-                <input {...register("timeStart")} type="time" required />
+              <div className="flex flex-col flex-grow">
+                <Label>Start Time:</Label>
+                <Input {...register("timeStart")} type="time" isRequired />
               </div>
-              <div>
-                <label>End Time:</label>
-                <input {...register("timeEnd")} type="time" required />
+              <div className="flex flex-col flex-grow">
+                <Label>End Time:</Label>
+                <Input {...register("timeEnd")} type="time" isRequired />
               </div>
             </div>
             <div>
-              <label>Duration:</label>
+              <Label>Duration:</Label>
               <span>{jobDuration} Minutes</span>
             </div>
-            <button type="submit">Create Post</button>
+            <Button type="submit" variation="primary">Create Post</Button>
 
             {errors && <div>Error: {JSON.stringify(errors)}</div>}
             {newJob && <div>New Job Created: {JSON.stringify(newJob)}</div>}
           </form>
-        </Card>
+        </Flex>
       </div>
       <NavigationButtons />
     </div>
