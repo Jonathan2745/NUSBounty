@@ -22,6 +22,7 @@ const schema = a.schema({
       timeEnd: a.time(),
       DateStart: a.date(),
       completed: a.boolean(),
+      acceptedBy: a.id().array(),
     })
     .authorization((allow) => [allow.authenticated()]),
 
@@ -34,6 +35,7 @@ const schema = a.schema({
     bankName: a.string(),
     bankNumber: a.integer(),
     acceptedJobs: a.id().array(),
+    notifications: a.string().array(),
   })
   .identifier(['userId'])
   .authorization((allow) => [allow.owner()]),

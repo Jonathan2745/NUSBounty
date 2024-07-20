@@ -16,13 +16,36 @@ export const MyJobsPage = () => {
 
     // Set up the Queries for the Jobs Taken //
     type Bounty = Schema['Jobs']['type'];
+    type User = Schema['User']['type'];
     const { user } = useAuthenticator((context) => [context.user]);
 
 
     const [acceptedBounty, setAcceptedBounty] = useState<Bounty[]>([]);
     const [postedBounty, setPostedBounty] = useState<Bounty[]>([]);
     const [numberBooked, setNumberBooked] = useState<number>(-1);
+    const [currentUser, setCurrentUser] = useState<User | null>(null);
+    
+    const fetchCurrentUser = async () => {
+        if (user) {
+            const { data: currentuser, errors } = await client.models.User.get({
+                userId: user.userId,
+            })
+            if ( errors ){
+                console.error("User not found");
+            } else {
+                try{ 
+                    setCurrentUser(currentuser);
+                } catch (error) {
+                    console.error("errror setting curent user", error);
+                }
+            }
+        } else {
+            console.error("No user found");
+        }
+    }
+
     // Deletion of Bounty // 
+
     
     const deleteBounty = async(bountyId:string) => {
         try {
@@ -30,6 +53,8 @@ export const MyJobsPage = () => {
                 id: bountyId,
             }
             if ( jobToDelete ){
+                // Find Users who accepted Job //
+                // Then Update their notifications //
                 await client.models.Jobs.delete(jobToDelete);
                 console.log ("Job with ID ${id} deleted successfully");
             } else {
@@ -58,6 +83,11 @@ export const MyJobsPage = () => {
         } catch (error) {
             console.error('Error deleting job:', error);
         }
+
+        // Need to update users wallets //
+        
+
+
         fetchPostedBounties();
         fetchTakenBounties();
     };
@@ -68,23 +98,59 @@ export const MyJobsPage = () => {
             const jobToCancel = {
                 id: bountyId,
             }
-            if ( jobToCancel ){
-                const { data: Job } = await client.models.Jobs.get(jobToCancel);
-                if ( Job?.numBooked ){
-                    const NumberBooked = Job?.numBooked;
-                    setNumberBooked(NumberBooked);
-                }
+            const { data: Job } = await client.models.Jobs.get(jobToCancel);
+            if ( Job && Job.numBooked ){
+                const NumberBooked = Job.numBooked;
+                setNumberBooked(NumberBooked);
+            } else {
+                console.error("Job not found");
+                return;
+            }
+            
+            if ( Job.acceptedBy ){
+                const updatedAcceptedBy = Job.acceptedBy.filter(function(item) {
+                    return item != user.userId;
+                });
+                console.log("new accepted-by list: ", updatedAcceptedBy);
+
                 const realjobToCancel = {
                     id: bountyId,
                     numBooked: numberBooked,
+                    acceptedBy: updatedAcceptedBy,
                 }
-                await client.models.Jobs.update(realjobToCancel);
-                console.log ("Job with ID ${id} cancelled successfully");
+
+;
+
+                // Update Users' accepted Jobs : 
+                if ( currentUser?.acceptedJobs){
+                    const updatedAcceptedUser = currentUser.acceptedJobs.filter(function(jobIdNumber) {
+                        return jobIdNumber != Job.id;
+                    })
+                    const updatedUserAccepted = {
+                        userId: currentUser.userId,
+                        acceptedJobs: updatedAcceptedUser,
+                    }
+                    // for bug testing //
+                    console.log("new User Accepted Jobs list: ", updatedAcceptedUser);
+
+                
+                    // Part of Job-side Cancellation //
+                    await client.models.User.update(updatedUserAccepted);
+                    await client.models.Jobs.update(realjobToCancel);
+                    console.log ("Job with ID", bountyId,"cancelled successfully")
+                } else {
+                    console.error("Error cancelling on user side");
+                    return;
+                }
+
             } else {
-                console.log("Job with ID ${id} not found");
+                console.error("Job not accepted");
+                return;
             }
+
         } catch (error) {
             console.error('Error deleting job:', error);
+            return;
         }
         fetchPostedBounties();
         fetchTakenBounties();
@@ -93,23 +159,37 @@ export const MyJobsPage = () => {
 
 
     // Queries for Taken bounties
-    const fetchTakenBounties = async () => {
-        
-        // const { data: userAcceptedBounties } = await client.models.User.get({
-        //     id: "",
-        // })
+    const fetchTakenBounties = async () => {        
+        // return list of user taken bounties // 
+        if ( currentUser?.acceptedJobs ){
+            
+            const userTakenBounties = currentUser.acceptedJobs;
 
-        
-        
-        const { data: acceptedBounties } = await client.models.Jobs.list({
-            filter:{
-                id: {
-                    contains: "" //placeholder//
-                }
+            if (userTakenBounties.length === 0) {
+                console.error("No accepted jobs found for the current user.");
+                return;
             }
-        });
-        setAcceptedBounty(acceptedBounties);
-    } 
+
+
+            const arrayOfIds = {
+                or: userTakenBounties.map(jobidnumber => ({ id: { eq: jobidnumber } }))
+            };
+            
+            const filter = {
+                or: arrayOfIds.or as { id: { eq: string } }[] // Explicit type definition
+            };
+            
+            const { data: acceptedBounties, errors } = await client.models.Jobs.list({
+                filter: filter
+            });
+            setAcceptedBounty(acceptedBounties);
+            
+        } else {
+            console.error("error finding current user");
+            return;
+        }
+    }
+
 
 // Set up Queries for the Jobs Posted //
     const fetchPostedBounties = async () => {
@@ -122,6 +202,11 @@ export const MyJobsPage = () => {
         });
         setPostedBounty(postedBounties);
     }
+
+
+    useEffect(() => {
+        fetchCurrentUser();
+    }, []);
 
     useEffect(() => {
         const fetchBounties = async () => {
@@ -137,7 +222,7 @@ export const MyJobsPage = () => {
    
    
         }
-    , [user.username])
+    , [currentUser])
 
 
     return (
@@ -157,6 +242,7 @@ export const MyJobsPage = () => {
                     <p className="text-sm text-gray-500">Start Time: {job.timeStart}</p>
                     <p className="text-sm text-gray-500">End Time: {job.timeEnd}</p>
                     <p className="text-sm text-gray-500">Created by: {job.createdBy}</p>
+                    <p className="text-sm text-gray-500">Completed? : { job.isDone ? "yes": "no" }</p>
                     {/* Add more job details as needed */}
                     <Button onClick={() => cancelBounty(job.id)} > Cancel Bounty </Button>
                     </div>
@@ -176,7 +262,7 @@ export const MyJobsPage = () => {
                     <p className="text-gray-500">Bounty: ${job.bounty}</p>
                     <p className="text-sm text-gray-500">Start Time: {job.timeStart}</p>
                     <p className="text-sm text-gray-500">End Time: {job.timeEnd}</p>
-                    <p className="text-sm text-gray-500">Positions filled {job.numBooked} / {job.numberOfPax}</p>
+                    <p className="text-sm text-gray-500">Positions filled: {job.numBooked} / {job.numberOfPax} </p>
                     {/* Add more job details as needed */}
                     <p className="text-sm text-gray-500"> Completed? :{ (job.isDone ? "Yes" : "No ") } </p>
                     <Button onClick={() => deleteBounty(job.id)}>Delete</Button>

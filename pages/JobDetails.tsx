@@ -88,19 +88,26 @@ export const JobDetailsPage = () => {
                 if ( numBooked < numberOfPax ){
                     try {
                     // Book Job //
-                    const updatedBounty = {
-                        id: currentBounty.id,
-                        numBooked: numBooked ? 1 : numBooked + 1,
-                    };
-                    console.log("Current Bounty: ", currentBounty);
-                    console.log("Updating bounty with:", updatedBounty);
-                    try {
-                        const { data: updatedBounties } = await client.models.Jobs.update(updatedBounty);
-                        console.log("Updated Bounty: ", updatedBounties);
-                        // Update local state 
-                        setCurrentBounty(updatedBounties);
-                    } catch (error){
-                        console.error("Error updating user", error)
+                    if ( currentUser ) {
+                        const updatedAcceptedBy = currentBounty.acceptedBy ? [...currentBounty.acceptedBy, currentUser.userId] : [currentUser.userId];
+                        const updatedBounty = {
+                            id: currentBounty.id,
+                            numBooked: numBooked ? 1 : numBooked + 1,
+                            acceptedBy: updatedAcceptedBy,
+                        };
+                        console.log("Current Bounty: ", currentBounty);
+                        console.log("Updating bounty with:", updatedBounty);
+                        try {
+                            const { data: updatedBounties } = await client.models.Jobs.update(updatedBounty);
+                            console.log("Updated Bounty: ", updatedBounties);
+                            // Update local state 
+                            setCurrentBounty(updatedBounties);
+                        } catch (error){
+                            console.error("Error updating user", error)
+                        }
+                    }  else {
+                        console.log("No User");
+                        return;
                     }
                     // Update currentUsers accepted Jobs //
                         if ( currentUser ){
@@ -124,10 +131,12 @@ export const JobDetailsPage = () => {
                             }
                         } else {
                             console.error("Current user does not exist");
+                            return;
                         }
 
                     } catch (error) {
                         console.error("Error faced while booking job", error );
+                        return;
                     }
 
             } else {

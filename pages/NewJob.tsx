@@ -176,6 +176,8 @@ export const NewJobPage = () => {
         DateStart: formData.DateStart,
         completed: false,
       });
+
+      
       setNewJob(newJob);
       setErrors(errors);
       navigate("/jobs");

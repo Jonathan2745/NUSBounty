@@ -1,77 +1,74 @@
 
-
-// import React, { useState, useEffect } from "react";
-// import { useAuth } from "../src/hooks/useAuth"; // Adjust the path if necessary
-// import { useNavigate } from "react-router-dom";
-// import { uploadData } from 'aws-amplify/storage';
-// import { useAuthenticator } from '@aws-amplify/ui-react';
-
-// export const ProfilePage: React.FC = () => {
-//   const { logout } = useAuth();
-//   const navigate = useNavigate();
-//   const [shouldNavigate, setShouldNavigate] = useState<number | null>(null);
-//   const [file, setFile] = useState<File | null>(null);
-//   const { user } = useAuthenticator((context) => [context.user]);
-
-//   const handleLogout = () => {
-//     logout();
-//   };
-
-//   const handleSecrets = () => {
-//     setShouldNavigate(1);
-//   };
-
-//   const handleHome = () => {
-//     setShouldNavigate(2);
-//   };
-
-//   useEffect(() => {
-//     if (shouldNavigate === 1) {
-//       navigate("/secret");
-//     } else if (shouldNavigate === 2) {
-//       navigate("/home");
-//     }
-//   }, [shouldNavigate, navigate]);
-
-//   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//     const selectedFile = event.target.files ? event.target.files[0] : null;
-//     setFile(selectedFile);
-//   };
-
-//   const handleUpload = async () => {
-//     if (file) {
-//       uploadData({
-//         path: ({identityId} => `picture-submissions/${identityId}.jpg`,
-//         data: file,
-//       })
-//     } else {
-//       alert("No file selected");
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <h1>This is a Profile page</h1>
-//       <button onClick={handleLogout}>Logout</button>
-//       <button onClick={handleSecrets}>Secrets</button>
-//       <button onClick={handleHome}>Home</button>
-//       <input type="file" onChange={handleChange} />
-//       <button onClick={handleUpload}>Upload</button>
-//     </div>
-//   );
-// };
-
-
 import React, { useState, useEffect } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { uploadData } from "aws-amplify/storage";
 import { StorageImage } from "@aws-amplify/ui-react-storage";
 import { NavigationButtons } from "../src/components/NavigationButtons";
+import { type Schema } from '../amplify/data/resource';
+import { generateClient } from 'aws-amplify/api';
+import { Button } from '@aws-amplify/ui-react';
+
+const client = generateClient<Schema>();
 
 export const ProfilePage: React.FC = () => {
   const { user } = useAuthenticator((context) => [context.user]);
   const [file, setFile] = useState<File | null>(null);
   const [identityId, setIdentityId] = useState<string | null>(null);
+  
+  
+  type User = Schema['User']['type'];
+  const [ currentUser, setCurrentUser ] = useState<User | null>(null);
+  const [ currentUsername, setCurrentUsername] = useState<string>();
+
+
+  const setUsername = async () => {
+    const newUsername = prompt("Insert new username here : ");
+    if ( currentUser ){
+      try {
+        const updatedUser = {
+          userId: currentUser.userId,
+          username: newUsername,
+        }
+        await client.models.User.update(updatedUser);
+        if ( newUsername ){
+          setCurrentUsername(newUsername);
+        } else {
+          alert("username not inputted");
+          return;
+        }
+      } catch (error) {
+        console.log("error faced while updating username", error );
+      }
+    } else {
+      alert("no current user found");
+      return;
+    }
+  }
+
+
+
+  const fetchCurrentUser = async () => {
+    if (user) {
+        const { data: currentuser, errors } = await client.models.User.get({
+            userId: user.userId,
+        })
+        if ( errors ){
+            console.error("User not found");
+        } else {
+            try{ 
+                setCurrentUser(currentuser);
+            } catch (error) {
+                console.error("errror setting curent user", error);
+            }
+        }
+    } else {
+        console.error("No user found");
+    }
+  }
+
+  useEffect(() => {
+    fetchCurrentUser();
+  }, []);
 
 
 
@@ -127,6 +124,8 @@ export const ProfilePage: React.FC = () => {
           Upload
         </button>
       </div>
+      <Button onClick={setUsername}> set your username here ! </Button>
+      <h1> Current Username: {currentUser ? currentUser?.username: user.username}  </h1>
       <NavigationButtons />
     </div>
   );
