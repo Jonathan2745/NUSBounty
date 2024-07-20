@@ -94,6 +94,7 @@ export const JobDetailsPage = () => {
                             id: currentBounty.id,
                             numBooked: numBooked ? 1 : numBooked + 1,
                             acceptedBy: updatedAcceptedBy,
+                            // usersToClaim:  
                         };
                         console.log("Current Bounty: ", currentBounty);
                         console.log("Updating bounty with:", updatedBounty);

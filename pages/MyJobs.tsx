@@ -24,6 +24,8 @@ export const MyJobsPage = () => {
     const [postedBounty, setPostedBounty] = useState<Bounty[]>([]);
     const [numberBooked, setNumberBooked] = useState<number>(-1);
     const [currentUser, setCurrentUser] = useState<User | null>(null);
+    const [claimButtonStatuses, setClaimButtonStatuses] = useState<{ [key: string]: boolean }>({});
+
     
     const fetchCurrentUser = async () => {
         if (user) {
@@ -68,23 +70,35 @@ export const MyJobsPage = () => {
     };
 
     // Completion of Bounty //
-    const completeBounty = async (bountyId:string) => {
+    const completeBounty = async(bountyId:string) => {
         try {
-            const jobToComplete = {
+            const {data: jobToComplete} = await client.models.Jobs.get({
                 id: bountyId,
-                isDone: true,
-            }
-            if ( jobToComplete ){
-                await client.models.Jobs.update(jobToComplete);
+            });
+
+            if ( jobToComplete && jobToComplete.acceptedBy && currentUser ){
+                // update Users that ready to claim //
+                const acceptedUsers = jobToComplete.acceptedBy;
+                console.log("current Accepted Users ", acceptedUsers );
+
+                const updatedCompletedJob = {
+                    id: bountyId,
+                    isDone: true,
+                    userToClaim: acceptedUsers,
+                }
+
+                // Update Job Status to complete //
+                await client.models.Jobs.update(updatedCompletedJob);
                 console.log ("Job with ID ${id} completed successfully");
             } else {
                 console.log("Job with ID ${id} not found");
             }
         } catch (error) {
-            console.error('Error deleting job:', error);
+            console.error('Error completing job:', error);
         }
 
         // Need to update users wallets //
+
         
 
 
@@ -107,9 +121,9 @@ export const MyJobsPage = () => {
                 return;
             }
             
-            if ( Job.acceptedBy ){
+            if ( Job.acceptedBy && currentUser ){
                 const updatedAcceptedBy = Job.acceptedBy.filter(function(item) {
-                    return item != user.userId;
+                    return item != currentUser.userId;
                 });
                 console.log("new accepted-by list: ", updatedAcceptedBy);
 
@@ -179,10 +193,11 @@ export const MyJobsPage = () => {
                 or: arrayOfIds.or as { id: { eq: string } }[] // Explicit type definition
             };
             
-            const { data: acceptedBounties, errors } = await client.models.Jobs.list({
+            const { data: acceptedBounties } = await client.models.Jobs.list({
                 filter: filter
             });
             setAcceptedBounty(acceptedBounties);
+            acceptedBounties.forEach(job => updateClaimButtonStatus(job.id));
             
         } else {
             console.error("error finding current user");
@@ -204,6 +219,75 @@ export const MyJobsPage = () => {
     }
 
 
+    // Function to Claim Jobs //
+    const claimBounty = async (claimedBounty:string) => {
+        const { data : acceptedJob } = await client.models.Jobs.get({ 
+            id: claimedBounty
+        })
+
+        // Check if Jobs is completed and user is in claim list //
+        if ( acceptedJob && acceptedJob.isDone && acceptedJob.userToClaim && currentUser ){
+            if ( acceptedJob.userToClaim.includes(currentUser.userId) && acceptedJob.bounty ){
+                // user is in claim list //
+                console.log("user is in claim list");
+                // Step 1 : remove user from claim list //
+                const updatedUserToClaim = acceptedJob.userToClaim.filter(id => id !== currentUser.userId );
+                const updatedJob = {
+                    id: acceptedJob.id,
+                    userToClaim: updatedUserToClaim,
+                }
+                await client.models.Jobs.update(updatedJob);
+                console.log("Job updated", updatedJob);
+                // step 2: update user wallet //
+                const updatedUserWallet = { 
+                    userId: currentUser.userId,
+                    walletBalance: currentUser.walletBalance ? currentUser.walletBalance + acceptedJob.bounty : acceptedJob.bounty,
+                }
+                await client.models.User.update(updatedUserWallet);
+                console.log("User Updated", updatedUserWallet);
+
+            } else {
+                console.error("user not in claim list");
+                return;
+            }
+        } else {
+            console.error("error claiming job ( job not found ) ");
+            return;
+        }
+    }
+
+    const updateClaimButtonStatus = async (jobId: string) => {
+        try {
+            const { data: acceptedJob } = await client.models.Jobs.get({ 
+                id: jobId,
+            });
+            
+            if (acceptedJob && acceptedJob.isDone && acceptedJob.userToClaim && currentUser) {
+                console.log(acceptedJob);
+                if (acceptedJob.userToClaim.includes(currentUser.userId) && acceptedJob.bounty) {
+                    
+                    setClaimButtonStatuses((prevStatuses) => ({
+                        ...prevStatuses,
+                        [jobId]: true,
+                    }));
+                    console.log("previous status set ", claimButtonStatuses[jobId])
+                    return;
+                }
+            }
+            setClaimButtonStatuses((prevStatuses) => ({
+                ...prevStatuses,
+                [jobId]: false,
+            }));
+        } catch (error) {
+            console.error('Error fetching job status:', error);
+            setClaimButtonStatuses((prevStatuses) => ({
+                ...prevStatuses,
+                [jobId]: false,
+            }));
+        }
+    };
+    
+
     useEffect(() => {
         fetchCurrentUser();
     }, []);
@@ -220,9 +304,13 @@ export const MyJobsPage = () => {
         };
         fetchBounties();
    
-   
         }
     , [currentUser])
+
+    
+    
+
+    // Completed Jobs ? // for now put fucniton in accpeted Jobs
 
 
     return (
@@ -244,7 +332,9 @@ export const MyJobsPage = () => {
                     <p className="text-sm text-gray-500">Created by: {job.createdBy}</p>
                     <p className="text-sm text-gray-500">Completed? : { job.isDone ? "yes": "no" }</p>
                     {/* Add more job details as needed */}
-                    <Button onClick={() => cancelBounty(job.id)} > Cancel Bounty </Button>
+                    <Button variation="primary" width="10rem"  onClick={() => claimBounty(job.id)} disabled={!claimButtonStatuses[job.id]} className="right-0" style={{ bottom: '4px' }}> Claim bounty </Button>
+
+                    <Button onClick={() => cancelBounty(job.id)} > Cancel Accepting Bounty  </Button>
                     </div>
                 </div>
                 </li>

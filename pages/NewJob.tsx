@@ -50,7 +50,6 @@ interface NewJob {
   timeStart?: string | null; // Adjusted to allow for null values
   timeEnd?: string | null; // Adjusted to allow for null values
   DateStart?: string | null;
-  completed?: boolean | null;
 }
 
 export const NewJobPage = () => {
@@ -174,7 +173,6 @@ export const NewJobPage = () => {
         timeStart: formData.timeStart,
         timeEnd: formData.timeEnd,
         DateStart: formData.DateStart,
-        completed: false,
       });
 
       

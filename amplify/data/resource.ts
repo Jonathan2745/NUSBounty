@@ -21,7 +21,7 @@ const schema = a.schema({
       timeStart: a.time(),
       timeEnd: a.time(),
       DateStart: a.date(),
-      completed: a.boolean(),
+      userToClaim : a.id().array(),
       acceptedBy: a.id().array(),
     })
     .authorization((allow) => [allow.authenticated()]),
