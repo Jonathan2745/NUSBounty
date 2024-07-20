@@ -18,8 +18,7 @@ export const ProfilePage: React.FC = () => {
   
   type User = Schema['User']['type'];
   const [ currentUser, setCurrentUser ] = useState<User | null>(null);
-  const [ currentUsername, setCurrentUsername] = useState<string>();
-
+  const [ currentUsername, setCurrentUsername] = useState<string>(user.username);
 
   const setUsername = async () => {
     const newUsername = prompt("Insert new username here : ");
@@ -125,7 +124,7 @@ export const ProfilePage: React.FC = () => {
         </button>
       </div>
       <Button onClick={setUsername}> set your username here ! </Button>
-      <h1> Current Username: {currentUser ? currentUser?.username: user.username}  </h1>
+      <h1> Current Username: {currentUsername}  </h1>
       <NavigationButtons />
     </div>
   );
