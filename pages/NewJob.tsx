@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { type Schema } from "../amplify/data/resource";
-import { NavigationButtons } from "../src/components/NavigationButtons";
+import MainTemplate from "../src/components/template/MainTemplate";
 
 const client = generateClient<Schema>();
 
@@ -58,6 +58,7 @@ export const NewJobPage = () => {
 
   const navigate = useNavigate();
 
+  // Declaration of useStates and types used for NewJobpage
   const { register, handleSubmit, watch, setValue } = useForm<FormData>();
   const [newJob, setNewJob] = useState<NewJob | null>(null);
   const [errors, setErrors] = useState<any>(null);
@@ -178,13 +179,29 @@ export const NewJobPage = () => {
       
       setNewJob(newJob);
       setErrors(errors);
-      navigate("/jobs");
+      // Send notification to current user //
+      try {
+        const newNotification = {
+            content: `Created Job ${newJob?.jobId}`,
+            isDone: false,
+            Userfor: currentUser.userId,
+        }
+
+        await client.models.Notifications.create(newNotification);
+        console.log('Notification created:', newNotification);
+      } catch (error) {
+          console.error('Error creating notification:', error);
+      }
+
     } catch (err) {
       console.error(err);
     }
+    navigate("/jobs");
+
   };
 
   return (
+    <MainTemplate>
     <div className="m-5 flex flex-col">
       <div className="flex flex-col items-center justify-center m-5">
         <Flex>
@@ -255,7 +272,8 @@ export const NewJobPage = () => {
           </form>
         </Flex>
       </div>
-      <NavigationButtons />
+
     </div>
+    </MainTemplate>
   );
 };

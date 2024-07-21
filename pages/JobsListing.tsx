@@ -1,4 +1,3 @@
-import { NavigationButtons } from "../src/components/NavigationButtons";
 import { useNavigate } from "react-router-dom";
 
 import { Collection, Card, Heading, View, Divider, Button } from '@aws-amplify/ui-react';
@@ -9,6 +8,7 @@ import * as React from 'react';
 import { generateClient } from 'aws-amplify/data';
 import { type Schema } from '../amplify/data/resource';
 import { useState, useEffect } from 'react';
+import MainTemplate from "../src/components/template/MainTemplate";
 
 const client = generateClient<Schema>();
 
@@ -34,7 +34,10 @@ export const JobPage = () => {
     const inputRef = React.useRef<HTMLInputElement | null>(null);
     const searchButtonRef = React.useRef<HTMLButtonElement | null>(null);
     const navigate = useNavigate();
-  
+
+    const [Jobs, setPosts] = useState<Jobs[]>([]);
+
+    // Search feature, UNIMPLEMENTED YET -- to return inputRef into a filter // 
     const onClick = React.useCallback(() => {
       if( inputRef.current ){
         inputRef.current.focus();
@@ -42,6 +45,7 @@ export const JobPage = () => {
       }
     }, []);
   
+    // Function that updates search when clicked //
     React.useEffect(() => {
       const searchButtonRefCurrent = searchButtonRef.current;
       if (searchButtonRef && searchButtonRefCurrent) {
@@ -55,8 +59,6 @@ export const JobPage = () => {
       }
     }, [onClick]);
 
-
-    const [Jobs, setPosts] = useState<Jobs[]>([]);
       
     useEffect(() => {
       const fetchPosts = async () => {
@@ -84,9 +86,9 @@ export const JobPage = () => {
 
 
   return (
+    <MainTemplate>
     <div className="flex flex-col items-center justify-center h-screen overflow-y-auto">
       <h1 className="text-5xl mb-6 font-semibold">Jobs</h1>
-      <NavigationButtons />
       <button
         onClick={handleNewJobs}
         className="bg-amplify-teal px-5 py-3 rounded-md mb-4"
@@ -171,6 +173,7 @@ export const JobPage = () => {
         ))}
       </ul>
     </div>
+    </MainTemplate>
   );
 };
 

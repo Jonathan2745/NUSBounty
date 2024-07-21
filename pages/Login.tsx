@@ -3,10 +3,11 @@ import { Amplify } from 'aws-amplify';
 import '@aws-amplify/ui-react/styles.css';
 import outputs from "../amplify_outputs.json";
 import React, { useEffect } from "react";
-import { NavigationButtons } from '../src/components/NavigationButtons';
+import MainTemplate  from "../src/components/template/MainTemplate";
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from 'aws-amplify/api';
 import { type Schema } from '../amplify/data/resource';
+
 
 Amplify.configure(outputs);
 
@@ -47,16 +48,19 @@ export const LoginPage: React.FC = () => {
 
   return (
     <div>
+    <div className='flex flex-col justify-center items-center min-h-screen min-w-full'>
     <h1 className="text-5xl mb-6 font-semibold"> Welcome to NUSBounty </h1>
+    
     <Authenticator>
       {({ user }) => (
-        <main>
-          <h1>Hello {user?.username}</h1>
-          <NavigationButtons />
-        </main>
+        <MainTemplate>
+          <main>
+            <h1>Hello {user?.username}</h1>
+          </main>
+        </MainTemplate>
       )}
     </Authenticator>
+    </div>
     </div>  
-
   );
 }

@@ -5,19 +5,25 @@ import { useState, useEffect } from 'react';
 import { generateClient } from 'aws-amplify/api';
 import { Button } from '@aws-amplify/ui-react';
 import { useNavigate } from 'react-router-dom';
+import MainTemplate from "../src/components/template/MainTemplate";
+
 
 const client = generateClient<Schema>();
 
 export const JobDetailsPage = () => {
+    // const Variable declaration + taking in jobId from params(url) //
     const { jobId } = useParams();
     const { user } = useAuthenticator((context) => [context.user]);
     const navigate = useNavigate();
 
     type Jobs = Schema['Jobs']['type'];
-    // Implement vewing of jobs per user //
-// Fetch Title, content , all details //
+    type User = Schema['User']['type'];
     const [ currentBounty, setCurrentBounty ] = useState<Jobs | null>(null);
+    const [currentUser, setCurrentUser] = useState<User | null>(null);
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
+
+    // Fetches Bounty Selected by User in previous page //
     const fetchBounties = async () => {
         if( jobId ) {
         const { data: bounty, errors }  = await client.models.Jobs.get({
@@ -34,19 +40,11 @@ export const JobDetailsPage = () => {
             }            
         } else {
             console.error("No Such Job found")
-            // Include error handling //
+            return;
         }
     }
 
-
-    // Implement Booking on this page as well //
-    type User = Schema['User']['type'];
-    
-    const [currentUser, setCurrentUser] = useState<User | null>(null);
-    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
-
-
+    // Fetches currentUser - from authenticated currentUser //
     const fetchCurrentUser = async () => {
         if (user) {
             const { data: currentuser, errors } = await client.models.User.get({
@@ -66,19 +64,7 @@ export const JobDetailsPage = () => {
         }
     }
 
-    const checkButtonStatus = (bounty: Jobs | null = currentBounty , user: User | null = currentUser) => {
-        if ((bounty && user) && bounty.numBooked && bounty.numberOfPax) {
-            const isFullyBooked = bounty.numBooked >= bounty.numberOfPax; // returns true if fully booked //
-            const isAlreadyAccepted = user.acceptedJobs?.includes(bounty.id) || false; // returns true if already accepted //
-            console.log("is Fully Booked", isFullyBooked);
-            console.log("is Already Accepted", isAlreadyAccepted);
-            setIsButtonDisabled(!(isFullyBooked && isAlreadyAccepted));
-        } else {
-            console.error("missing bounty or user", bounty, user);
-        }
-    }
-    
-
+    // Function to Book selected Bounty - updates User and Job parameters
     const BookBounty = async () => {    
         if ( currentBounty && currentBounty.numBooked != null && currentBounty.numberOfPax ){
             setIsButtonDisabled(true);
@@ -94,7 +80,6 @@ export const JobDetailsPage = () => {
                             id: currentBounty.id,
                             numBooked: numBooked ? 1 : numBooked + 1,
                             acceptedBy: updatedAcceptedBy,
-                            // usersToClaim:  
                         };
                         console.log("Current Bounty: ", currentBounty);
                         console.log("Updating bounty with:", updatedBounty);
@@ -130,22 +115,49 @@ export const JobDetailsPage = () => {
                             } catch (errors){
                                 console.error("new error lol", errors);
                             }
+                            // Send notification to current user //
+                                try {
+                                    
+                                    const newNotification = {
+                                        content: `Accepted Job ${currentBounty}`,
+                                        isDone: false,
+                                        Userfor: currentUser.userId,
+                                    }
+                    
+                                    await client.models.Notifications.create(newNotification);
+                                    console.log('Notification created:', newNotification);
+                                } catch (error) {
+                                    console.error('Error creating notification:', error);
+                                    return;
+                                }
                         } else {
                             console.error("Current user does not exist");
                             return;
                         }
-
                     } catch (error) {
                         console.error("Error faced while booking job", error );
                         return;
                     }
-
             } else {
                 console.log("Full Jobs, Cannot book");
-                // Handle Full Job // 
+                return; 
             }
         } else {
             console.error("Job does not exist");
+            return;
+        }
+        
+    }
+    // Function to toggle Booking button if user is valid to book Job/Bounty //
+    const checkButtonStatus = (bounty: Jobs | null = currentBounty , user: User | null = currentUser) => {
+        if ((bounty && user) && bounty.numBooked && bounty.numberOfPax) {
+            const isFullyBooked = bounty.numBooked >= bounty.numberOfPax; // returns true if fully booked //
+            const isAlreadyAccepted = user.acceptedJobs?.includes(bounty.id) || false; // returns true if already accepted //
+            console.log("is Fully Booked", isFullyBooked);
+            console.log("is Already Accepted", isAlreadyAccepted);
+            setIsButtonDisabled(!(isFullyBooked && isAlreadyAccepted));
+        } else {
+            console.error("missing bounty or user", bounty, user);
         }
     }
 
@@ -164,6 +176,7 @@ export const JobDetailsPage = () => {
 
 
     return (
+        <MainTemplate>
         <div>
             <h1> Testing Job: {currentBounty?.title ? currentBounty.title : "error finding job"}</h1>
             <ul className="divide-y divide-gray-200 w-full px-4">
@@ -190,5 +203,6 @@ export const JobDetailsPage = () => {
           </ul>
           <Button variation="primary" width="20rem" onClick={()=> navigate('/jobs')} > Return to Jobs </Button>
         </div>
+        </MainTemplate>
     )
 }

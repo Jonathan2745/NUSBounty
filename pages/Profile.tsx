@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { uploadData } from "aws-amplify/storage";
 import { StorageImage } from "@aws-amplify/ui-react-storage";
-import { NavigationButtons } from "../src/components/NavigationButtons";
+import MainTemplate from "../src/components/template/MainTemplate";
 import { type Schema } from '../amplify/data/resource';
 import { generateClient } from 'aws-amplify/api';
 import { Button } from '@aws-amplify/ui-react';
@@ -108,6 +108,7 @@ export const ProfilePage: React.FC = () => {
   };
 
   return (
+    <MainTemplate>
     <div className="flex flex-col items-center justify-center min-h-screen">
       <div className="m-12">
         <h1 className="text-5xl mb-6 font-semibold">Profile</h1>
@@ -125,7 +126,7 @@ export const ProfilePage: React.FC = () => {
       </div>
       <Button onClick={setUsername}> set your username here ! </Button>
       <h1> Current Username: {currentUsername}  </h1>
-      <NavigationButtons />
     </div>
+    </MainTemplate>
   );
 };

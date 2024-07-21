@@ -1,4 +1,4 @@
-import { NavigationButtons } from "../src/components/NavigationButtons";
+import MainTemplate from "../src/components/template/MainTemplate";
 import { Button } from "@aws-amplify/ui-react";
 import { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
@@ -90,6 +90,7 @@ export const Secret = () => {
   }, [currentUser, currentUser?.walletBalance])
 
   return (
+    <MainTemplate>
     <div className="flex flex-col items-center justify-center min-h-screen">
       <h1 className="text-5xl mb-6 font-semibold">Wallet Test Page</h1>
 
@@ -103,7 +104,7 @@ export const Secret = () => {
             {/* // make this button remove 2$ from the current users wallet // */}
       <Button loadingText="" onClick={() => changeBalance(-2)}> Steal me $2 </Button>
 
-      <NavigationButtons />
     </div>
+    </MainTemplate>
   );
 };

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useAuthenticator } from "@aws-amplify/ui-react";
+import { Divider, useAuthenticator } from "@aws-amplify/ui-react";
 
 
 export const NavigationButtons = () => {
@@ -45,44 +45,48 @@ export const NavigationButtons = () => {
   };
 
   return (
-    <div className="flex gap-3 m-3 text-white text-lg font-bold flex-wrap justify-center">
+    <div className="flex flex-col gap-2.5 text-white text-xl font-bold justify-start">
       <button
         onClick={handleProfile}
-        className="bg-amplify-teal px-5 py-3 rounded-md"
+        className="bg-white text-slate-500 text-start rounded-md p-0 hover:underline hover:text-slate-600 border-none text-nowrap mr-3"
       >
         Profile
       </button>
+      <Divider className="border-slate-300" />
       <button
         onClick={handleSecrets}
-        className="bg-amplify-teal px-5 py-3 rounded-md"
+        className="bg-white text-slate-500 text-start rounded-md p-0 hover:underline hover:text-slate-600 border-none text-nowrap mr-4"
       >
         My Wallet
       </button>
+      <Divider className="border-slate-300" />
       <button
         onClick={handleJobs}
-        className="bg-amplify-teal px-5 py-3 rounded-md"
+        className="bg-white text-slate-500 text-start rounded-md p-0 hover:underline hover:text-slate-600 border-none text-nowrap mr-4"
       >
         Jobs Page
       </button>
+      <Divider className="border-slate-300" />
       <button
         onClick={handleHome}
-        className="bg-amplify-teal px-5 py-3 rounded-md"
+        className="bg-white text-slate-500 text-start rounded-md p-0 hover:underline hover:text-slate-600 border-none text-nowrap mr-4"
       >
         Home Page
       </button>
+      <Divider className="border-slate-300" />
       <button
         onClick={handleMyJobs}
-        className="bg-amplify-teal px-5 py-3 rounded-md"
+        className="bg-white text-slate-500 text-start rounded-md p-0 hover:underline hover:text-slate-600 border-none text-nowrap mr-4"
       >
         My Jobs Page
       </button>
+      <Divider className="border-slate-300" />
       <button
         onClick={signOut}
-        className="bg-amplify-teal px-5 py-3 rounded-md"
+        className="bg-white text-slate-500 text-start rounded-md p-0 hover:underline hover:text-slate-600 border-none text-nowrap mr-4"
       >
         Logout
       </button>
-
     </div>
   );
 };

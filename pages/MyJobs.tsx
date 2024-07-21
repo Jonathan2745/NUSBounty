@@ -4,7 +4,8 @@ import { generateClient } from 'aws-amplify/data';
 import { type Schema } from '../amplify/data/resource';
 import { useState, useEffect } from 'react';
 
-import { NavigationButtons } from "../src/components/NavigationButtons";
+import MainTemplate from "../src/components/template/MainTemplate";
+
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
 import { Button } from '@aws-amplify/ui-react';
@@ -46,16 +47,38 @@ export const MyJobsPage = () => {
         }
     }
 
-    // Deletion of Bounty // 
 
-    
+
+
+    // Deletion of Bounty //     
     const deleteBounty = async(bountyId:string) => {
         try {
-            const jobToDelete = {
+            const { data: jobToDelete } = await client.models.Jobs.get({
                 id: bountyId,
-            }
-            if ( jobToDelete ){
+            });
+
+            if ( jobToDelete && jobToDelete.acceptedBy){
                 // Find Users who accepted Job //
+                for (const id of jobToDelete.acceptedBy){
+                    // Send notification to accepted user //
+                    try {
+                        if ( id ){
+                        const newNotification = {
+                            content: `Accepted Job ${jobToDelete} has been deleted`,
+                            isDone: false,
+                            Userfor: id,
+                        }
+        
+                        await client.models.Notifications.create(newNotification);
+                        console.log('Notification created:', newNotification);
+                        } else {
+                            // Assuming no one accepted Job // Do nothing 
+                            console.log( "This should be null ", jobToDelete.acceptedBy);
+                        }
+                    } catch (error) {
+                        console.error('Error creating notification:', error);
+                    }
+                }
                 // Then Update their notifications //
                 await client.models.Jobs.delete(jobToDelete);
                 console.log ("Job with ID ${id} deleted successfully");
@@ -90,18 +113,57 @@ export const MyJobsPage = () => {
                 // Update Job Status to complete //
                 await client.models.Jobs.update(updatedCompletedJob);
                 console.log ("Job with ID ${id} completed successfully");
+
+
+                // Alert currentUser that Job has been marked as complete //
+                // Send notification to current user //
+                try {
+                    const newNotification = {
+                        content: `Job ${updatedCompletedJob.id} has been marked as complte`,
+                        isDone: false,
+                        Userfor: currentUser.userId,
+                    }
+    
+                    await client.models.Notifications.create(newNotification);
+                    console.log('Notification created:', newNotification);
+                } catch (error) {
+                    console.error('Error creating notification:', error);
+                }
+
+                // Alert acceptedUsers that Job has been marked as complete //
+                // Find Users who accepted Job //
+                if ( jobToComplete.userToClaim){
+                    for (const id of jobToComplete.userToClaim){
+                        // Send notification to accepted user //
+                        try {
+                            if ( id ){
+                            const newNotification = {
+                                content: `Accepted Job ${jobToComplete.id} has been marked as Complete, please proceed to claim Bounty`,
+                                isDone: false,
+                                Userfor: id,
+                            }
+            
+                            await client.models.Notifications.create(newNotification);
+                            console.log('Notification created:', newNotification);
+                            } else {
+                                // Assuming no one accepted Job // Do nothing 
+                                console.log( "This should be null ", jobToComplete.acceptedBy);
+                            }
+                        } catch (error) {
+                            console.error('Error creating notification:', error);
+                        }
+                    }
+                } else {
+                    console.error("userToClaim not updated or no one did job", acceptedUsers);
+                }
+
             } else {
                 console.log("Job with ID ${id} not found");
             }
         } catch (error) {
             console.error('Error completing job:', error);
         }
-
-        // Need to update users wallets //
-
         
-
-
         fetchPostedBounties();
         fetchTakenBounties();
     };
@@ -133,7 +195,6 @@ export const MyJobsPage = () => {
                     acceptedBy: updatedAcceptedBy,
                 }
 
-;
 
                 // Update Users' accepted Jobs : 
                 if ( currentUser?.acceptedJobs){
@@ -151,7 +212,41 @@ export const MyJobsPage = () => {
                     // Part of Job-side Cancellation //
                     await client.models.User.update(updatedUserAccepted);
                     await client.models.Jobs.update(realjobToCancel);
-                    console.log ("Job with ID", bountyId,"cancelled successfully")
+                    console.log ("Job with ID", bountyId,"cancelled successfully");
+
+                    // Send notification to current user //
+                    try {
+        
+                        const newNotification = {
+                            content: `Cancelled Job ${Job.id}`,
+                            isDone: false,
+                            Userfor: currentUser.userId,
+                        }
+        
+                        await client.models.Notifications.create(newNotification);
+                        console.log('Notification created:', newNotification);
+                    } catch (error) {
+                        console.error('Error creating notification:', error);
+                    }
+                    
+                    // Send Notification to Job Owner //
+                    try {
+                        if ( Job.createdBy){
+                        const newNotification = {
+                            content: `Job ${Job.id} cancelled by ${currentUser.username}`,
+                            isDone: false,
+                            Userfor: Job.createdBy,
+                        }
+        
+                        await client.models.Notifications.create(newNotification);
+                        console.log('Notification created:', newNotification);
+                        } else {
+                            console.error("Error Notifying Job Creator");
+                        }
+                    } catch (error) {
+                        console.error('Error creating notification:', error);
+                    }
+
                 } else {
                     console.error("Error cancelling on user side");
                     return;
@@ -219,7 +314,7 @@ export const MyJobsPage = () => {
     }
 
 
-    // Function to Claim Jobs //
+    // Function to Claim Jobs  -- Checks if user is valid and updates users Wallet //
     const claimBounty = async (claimedBounty:string) => {
         const { data : acceptedJob } = await client.models.Jobs.get({ 
             id: claimedBounty
@@ -245,7 +340,19 @@ export const MyJobsPage = () => {
                 }
                 await client.models.User.update(updatedUserWallet);
                 console.log("User Updated", updatedUserWallet);
-
+                
+                // Send notification to current user //
+                try {
+                    const newNotification = {
+                        content: `Bounty Claimed: ${acceptedJob.bounty}, Bounty from: ${acceptedJob.title}`,
+                        isDone: false,
+                        Userfor: currentUser.userId,
+                    }
+                    await client.models.Notifications.create(newNotification);
+                    console.log('Notification created:', newNotification);
+                } catch (error) {
+                    console.error('Error creating notification:', error);
+                }
             } else {
                 console.error("user not in claim list");
                 return;
@@ -256,6 +363,7 @@ export const MyJobsPage = () => {
         }
     }
 
+    // Funciton to Disable Claim Button if bounty already claimed/ Job not completed yet
     const updateClaimButtonStatus = async (jobId: string) => {
         try {
             const { data: acceptedJob } = await client.models.Jobs.get({ 
@@ -308,14 +416,10 @@ export const MyJobsPage = () => {
     , [currentUser])
 
     
-    
-
-    // Completed Jobs ? // for now put fucniton in accpeted Jobs
-
 
     return (
+        <MainTemplate>
         <div className="flex flex-col items-center justify-center h-screen overflow-y-auto">
-        <NavigationButtons/>
             <h1> test messege </h1>
 
             <h1 className="text-5xl mb-6 font-semibold"> Accepted bounties !</h1>
@@ -365,5 +469,6 @@ export const MyJobsPage = () => {
 
 
         </div>
+        </MainTemplate>
     );
 };

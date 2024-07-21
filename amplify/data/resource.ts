@@ -40,11 +40,13 @@ const schema = a.schema({
   .identifier(['userId'])
   .authorization((allow) => [allow.owner()]),
 
-  Todo: a.model({
+  Notifications: a.model({
       content: a.string(),
-      isDone: a.boolean()
+      isDone: a.boolean(),
+      Userfor: a.id().required(),
     })
-    .authorization(allow => [allow.owner()]),
+    .authorization(allow => [allow.authenticated()]),
+
 });
 
 export type Schema = ClientSchema<typeof schema>;
