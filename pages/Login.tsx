@@ -1,15 +1,12 @@
 import { Authenticator } from '@aws-amplify/ui-react';
-import { Amplify } from 'aws-amplify';
 import '@aws-amplify/ui-react/styles.css';
-import outputs from "../amplify_outputs.json";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import MainTemplate  from "../src/components/template/MainTemplate";
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from 'aws-amplify/api';
 import { type Schema } from '../amplify/data/resource';
+import { fetchUserAttributes } from 'aws-amplify/auth';
 
-
-Amplify.configure(outputs);
 
 const client = generateClient<Schema>();
 
@@ -45,6 +42,16 @@ export const LoginPage: React.FC = () => {
     }
   }, [user]);
 
+  // const [userUsername, setUserUsername] = useState(null);
+
+  // useEffect(() => {
+  //   fetchUserAttributes();
+  // }, []);
+
+  //   const fetchUserAttributes = async() => {
+  //       user.signInDetails?.loginId      
+  //   }
+
 
   return (
     <div>
@@ -55,7 +62,7 @@ export const LoginPage: React.FC = () => {
       {({ user }) => (
         <MainTemplate>
           <main>
-            <h1>Hello {user?.username}</h1>
+            <h1>Hello {user?.signInDetails?.loginId}</h1>
           </main>
         </MainTemplate>
       )}

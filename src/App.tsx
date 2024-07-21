@@ -24,8 +24,6 @@ import { AuthProvider } from "./hooks/useAuth.js";
 
 
 function App() {
-
-
   return ( 
   <Authenticator.Provider>
     <AuthProvider>
