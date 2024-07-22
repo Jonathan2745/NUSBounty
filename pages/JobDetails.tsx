@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { generateClient } from 'aws-amplify/api';
 import { Button } from '@aws-amplify/ui-react';
 import { useNavigate } from 'react-router-dom';
-import MainTemplate from "../src/components/template/MainTemplate";
+import MainTemplate from "../src/components/template/MainTemplate.tsx";
 
 
 const client = generateClient<Schema>();
@@ -119,7 +119,7 @@ export const JobDetailsPage = () => {
                                 try {
                                     
                                     const newNotification = {
-                                        content: `Accepted Job ${currentBounty}`,
+                                        content: `Accepted Job ${currentBounty.title}`,
                                         isDone: false,
                                         Userfor: currentUser.userId,
                                     }
@@ -176,7 +176,7 @@ export const JobDetailsPage = () => {
 
 
     return (
-        <MainTemplate>
+        <MainTemplate currentNavigation={-1}>
         <div>
             <h1> Testing Job: {currentBounty?.title ? currentBounty.title : "error finding job"}</h1>
             <ul className="divide-y divide-gray-200 w-full px-4">

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { type Schema } from "../amplify/data/resource";
-import MainTemplate from "../src/components/template/MainTemplate";
+import MainTemplate from "../src/components/template/MainTemplate.tsx";
 
 const client = generateClient<Schema>();
 
@@ -201,7 +201,7 @@ export const NewJobPage = () => {
   };
 
   return (
-    <MainTemplate>
+    <MainTemplate currentNavigation={2}>
     <div className="m-5 flex flex-col">
       <div className="flex flex-col items-center justify-center m-5">
         <Flex>

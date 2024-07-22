@@ -1,11 +1,10 @@
 import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
-import React, { useEffect, useState } from "react";
-import MainTemplate  from "../src/components/template/MainTemplate";
+import React, { useEffect } from "react";
+import MainTemplate  from "../src/components/template/MainTemplate.tsx";
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from 'aws-amplify/api';
 import { type Schema } from '../amplify/data/resource';
-import { fetchUserAttributes } from 'aws-amplify/auth';
 
 
 const client = generateClient<Schema>();
@@ -60,7 +59,7 @@ export const LoginPage: React.FC = () => {
     
     <Authenticator>
       {({ user }) => (
-        <MainTemplate>
+        <MainTemplate currentNavigation={7} >
           <main>
             <h1>Hello {user?.signInDetails?.loginId}</h1>
           </main>

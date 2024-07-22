@@ -8,7 +8,7 @@ import * as React from 'react';
 import { generateClient } from 'aws-amplify/data';
 import { type Schema } from '../amplify/data/resource';
 import { useState, useEffect } from 'react';
-import MainTemplate from "../src/components/template/MainTemplate";
+import MainTemplate from "../src/components/template/MainTemplate.tsx";
 
 const client = generateClient<Schema>();
 
@@ -86,7 +86,7 @@ export const JobPage = () => {
 
 
   return (
-    <MainTemplate>
+    <MainTemplate currentNavigation={2}>
     <div className="flex flex-col items-center justify-center h-screen overflow-y-auto">
       <h1 className="text-5xl mb-6 font-semibold">Jobs</h1>
       <button

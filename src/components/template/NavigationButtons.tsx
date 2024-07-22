@@ -1,14 +1,22 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Divider, useAuthenticator } from "@aws-amplify/ui-react";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 
+interface NavigationButtonsProps {
+  current: number;
+}
 
-export const NavigationButtons = () => {
+export const NavigationButtons: React.FC<NavigationButtonsProps> = ({ current }) => {
   const { signOut } = useAuthenticator((context) => [context.user]);  
   const navigate = useNavigate();
   const [shouldNavigate, setShouldNavigate] = useState(0);
 
-
+  const handleClasses = (element: number) => {
+    if (element === current) {
+      return "bg-white text-slate-600 text-center p-0 rounded-none border-slate-600 hover:border-slate-600 border-t-2 border-0 text-nowrap font-normal mr-3";
+    }
+    return "bg-white text-slate-500 text-center p-0 rounded-none border-white hover:border-white border-t-2 border-0 hover:text-slate-600 text-nowrap font-normal mr-3 hover:underline";
+  }
 
   const handleSecrets = () => {
     setShouldNavigate(1);
@@ -21,6 +29,10 @@ export const NavigationButtons = () => {
   };
   const handleMyJobs = () => {
     setShouldNavigate(5);
+  };
+
+  const handleNewJob = () => {
+    setShouldNavigate(6);
   };
 
   useEffect(() => {
@@ -36,6 +48,9 @@ export const NavigationButtons = () => {
     if ( shouldNavigate == 5 ) {
       navigate("/myjobs");
     }
+    if ( shouldNavigate == 6 ) {
+      navigate("/newjob");
+    }
 
     if (shouldNavigate == 2) navigate("/profile");
   }, [shouldNavigate, navigate]);
@@ -45,45 +60,47 @@ export const NavigationButtons = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2.5 text-white text-xl font-bold justify-start">
+    <div className="flex flex-row gap-2.5 text-lg justify-start">
       <button
         onClick={handleProfile}
-        className="bg-white text-slate-500 text-start rounded-md p-0 hover:underline hover:text-slate-600 border-none text-nowrap mr-3"
+        className={handleClasses(0)}
       >
         Profile
       </button>
-      <Divider className="border-slate-300" />
       <button
         onClick={handleSecrets}
-        className="bg-white text-slate-500 text-start rounded-md p-0 hover:underline hover:text-slate-600 border-none text-nowrap mr-4"
+        className={handleClasses(1)}
       >
         My Wallet
       </button>
-      <Divider className="border-slate-300" />
       <button
         onClick={handleJobs}
-        className="bg-white text-slate-500 text-start rounded-md p-0 hover:underline hover:text-slate-600 border-none text-nowrap mr-4"
+        className={handleClasses(2)}
       >
         Jobs Page
       </button>
-      <Divider className="border-slate-300" />
+      <button
+        onClick={handleNewJob}
+        className={handleClasses(6)}
+      >
+        Create New Job
+      </button>
+      
       <button
         onClick={handleHome}
-        className="bg-white text-slate-500 text-start rounded-md p-0 hover:underline hover:text-slate-600 border-none text-nowrap mr-4"
+        className={handleClasses(3)}
       >
         Home Page
       </button>
-      <Divider className="border-slate-300" />
       <button
         onClick={handleMyJobs}
-        className="bg-white text-slate-500 text-start rounded-md p-0 hover:underline hover:text-slate-600 border-none text-nowrap mr-4"
+        className={handleClasses(4)}
       >
         My Jobs Page
       </button>
-      <Divider className="border-slate-300" />
       <button
         onClick={signOut}
-        className="bg-white text-slate-500 text-start rounded-md p-0 hover:underline hover:text-slate-600 border-none text-nowrap mr-4"
+        className={handleClasses(5)}
       >
         Logout
       </button>

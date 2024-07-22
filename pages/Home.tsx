@@ -3,7 +3,7 @@
 import { type Schema } from '../amplify/data/resource';
 import { generateClient } from "aws-amplify/data";
 import { useState, useEffect } from "react";
-import MainTemplate from "../src/components/template/MainTemplate";
+import MainTemplate from "../src/components/template/MainTemplate.tsx";
 import { useAuthenticator } from '@aws-amplify/ui-react';
 
 export const HomePage = () => {
@@ -80,7 +80,7 @@ export const HomePage = () => {
   }, [currentUser]);
 
   return (
-    <MainTemplate>
+    <MainTemplate currentNavigation={3}>
       <div className="flex flex-col items-center justify-center min-h-screen">
         <h1 className="text-5xl mb-6 font-semibold">Home Page</h1>
         <button onClick={createNotif}>Add new Notif</button>

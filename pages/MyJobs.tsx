@@ -4,7 +4,7 @@ import { generateClient } from 'aws-amplify/data';
 import { type Schema } from '../amplify/data/resource';
 import { useState, useEffect } from 'react';
 
-import MainTemplate from "../src/components/template/MainTemplate";
+import MainTemplate from "../src/components/template/MainTemplate.tsx";
 
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
@@ -64,7 +64,7 @@ export const MyJobsPage = () => {
                     try {
                         if ( id ){
                         const newNotification = {
-                            content: `Accepted Job ${jobToDelete} has been deleted`,
+                            content: `Accepted Job: ${jobToDelete.title} has been deleted`,
                             isDone: false,
                             Userfor: id,
                         }
@@ -80,8 +80,27 @@ export const MyJobsPage = () => {
                     }
                 }
                 // Then Update their notifications //
+                // alert current user that job deleted  //
+                if ( currentUser ){
+                    try {
+                        const newNotification = {
+                            content: `Job: ${jobToDelete.title} has been deleted`,
+                            isDone: false,
+                            Userfor: currentUser.userId,
+                        }
+        
+                        await client.models.Notifications.create(newNotification);
+                        console.log('Notification created:', newNotification);
+                    } catch (error) {
+                        console.error('Error creating notification:', error);
+                    }
                 await client.models.Jobs.delete(jobToDelete);
                 console.log ("Job with ID ${id} deleted successfully");
+
+                } else {
+                    console.error("user not found");
+                    return
+                }
             } else {
                 console.log("Job with ID ${id} not found");
             }
@@ -119,7 +138,7 @@ export const MyJobsPage = () => {
                 // Send notification to current user //
                 try {
                     const newNotification = {
-                        content: `Job ${updatedCompletedJob.id} has been marked as complte`,
+                        content: `Job: ${jobToComplete.title} has been marked as complete`,
                         isDone: false,
                         Userfor: currentUser.userId,
                     }
@@ -138,7 +157,7 @@ export const MyJobsPage = () => {
                         try {
                             if ( id ){
                             const newNotification = {
-                                content: `Accepted Job ${jobToComplete.id} has been marked as Complete, please proceed to claim Bounty`,
+                                content: `Accepted Job: ${jobToComplete.title} has been marked as Complete, please proceed to claim Bounty`,
                                 isDone: false,
                                 Userfor: id,
                             }
@@ -218,7 +237,7 @@ export const MyJobsPage = () => {
                     try {
         
                         const newNotification = {
-                            content: `Cancelled Job ${Job.id}`,
+                            content: `Cancelled Job: ${Job.title}`,
                             isDone: false,
                             Userfor: currentUser.userId,
                         }
@@ -233,7 +252,7 @@ export const MyJobsPage = () => {
                     try {
                         if ( Job.createdBy){
                         const newNotification = {
-                            content: `Job ${Job.id} cancelled by ${currentUser.username}`,
+                            content: `Job: ${Job.title} cancelled by ${currentUser.username}`,
                             isDone: false,
                             Userfor: Job.createdBy,
                         }
@@ -418,7 +437,7 @@ export const MyJobsPage = () => {
     
 
     return (
-        <MainTemplate>
+        <MainTemplate currentNavigation={4}>
         <div className="flex flex-col items-center justify-center h-screen overflow-y-auto">
             <h1> test messege </h1>
 
