@@ -176,7 +176,7 @@ export const JobDetailsPage = () => {
 
 
     return (
-        <MainTemplate currentNavigation={-1}>
+        <MainTemplate currentNavigation={""}>
         <div>
             <h1> Testing Job: {currentBounty?.title ? currentBounty.title : "error finding job"}</h1>
             <ul className="divide-y divide-gray-200 w-full px-4">

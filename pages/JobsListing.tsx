@@ -86,7 +86,7 @@ export const JobPage = () => {
 
 
   return (
-    <MainTemplate currentNavigation={2}>
+    <MainTemplate currentNavigation={"jobs"}>
     <div className="flex flex-col items-center justify-center h-screen overflow-y-auto">
       <h1 className="text-5xl mb-6 font-semibold">Jobs</h1>
       <button

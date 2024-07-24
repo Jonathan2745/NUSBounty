@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
 interface NavigationButtonsProps {
-  current: number;
+  current: string;
 }
 
 export const NavigationButtons: React.FC<NavigationButtonsProps> = ({ current }) => {
@@ -11,9 +11,9 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({ current })
   const navigate = useNavigate();
   const [shouldNavigate, setShouldNavigate] = useState(0);
 
-  const handleClasses = (element: number) => {
+  const handleClasses = (element: string) => {
     if (element === current) {
-      return "bg-white text-slate-600 text-center p-0 rounded-none border-slate-600 hover:border-slate-600 border-t-2 border-0 text-nowrap font-normal mr-3";
+      return "bg-white text-slate-600 text-center p-0 rounded-none border-slate-600 hover:border-slate-600 border-t-2 border-0 text-nowrap font-semibold mr-3";
     }
     return "bg-white text-slate-500 text-center p-0 rounded-none border-white hover:border-white border-t-2 border-0 hover:text-slate-600 text-nowrap font-normal mr-3 hover:underline";
   }
@@ -63,44 +63,44 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({ current })
     <div className="flex flex-row gap-2.5 text-lg justify-start">
       <button
         onClick={handleProfile}
-        className={handleClasses(0)}
+        className={handleClasses("profile")}
       >
         Profile
       </button>
       <button
         onClick={handleSecrets}
-        className={handleClasses(1)}
+        className={handleClasses("wallet")}
       >
         My Wallet
       </button>
       <button
         onClick={handleJobs}
-        className={handleClasses(2)}
+        className={handleClasses("jobs")}
       >
         Jobs Page
       </button>
       <button
         onClick={handleNewJob}
-        className={handleClasses(6)}
+        className={handleClasses("new_job")}
       >
         Create New Job
       </button>
       
       <button
         onClick={handleHome}
-        className={handleClasses(3)}
+        className={handleClasses("home")}
       >
         Home Page
       </button>
       <button
         onClick={handleMyJobs}
-        className={handleClasses(4)}
+        className={handleClasses("my_jobs")}
       >
         My Jobs Page
       </button>
       <button
         onClick={signOut}
-        className={handleClasses(5)}
+        className={handleClasses("logout")}
       >
         Logout
       </button>

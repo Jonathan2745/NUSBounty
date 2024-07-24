@@ -5,6 +5,10 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { type Schema } from "../amplify/data/resource";
 import MainTemplate from "../src/components/template/MainTemplate.tsx";
+import { ToastContainer, toast } from "react-toastify";
+import LoadingNewJob from "../src/components/LoadingScreens/LoadingNewJob.tsx";
+import { TrendingUp, TroubleshootRounded } from "@mui/icons-material";
+
 
 const client = generateClient<Schema>();
 
@@ -120,9 +124,15 @@ export const NewJobPage = () => {
     updateDuration();
   }, [timeStart, timeEnd, setValue]);
 
+  // Creating loading Screen for Posting of Jobs //
+  const [isLoading,setIsLoading] = useState(false);
+   
+
   const onSubmit = async (formData: FormData) => {
+    setIsLoading(true);
     if (authStatus !== "authenticated") {
       console.error("User is not authenticated");
+      setIsLoading(false);
       return;
     }
 
@@ -131,6 +141,7 @@ export const NewJobPage = () => {
         const updatedBalance = currentUser?.walletBalance - (formData.bounty * formData.numberOfPax);
         if ( updatedBalance < 0 ){
           alert("User has Insufficent Balance to perform this booking");
+          setIsLoading(false);
           return;
         } else {
           const updatedUser = {
@@ -150,10 +161,12 @@ export const NewJobPage = () => {
         }
       } else {
         prompt("Error: User not logged in or has not initialised wallet.");
+        setIsLoading(false);
         return;
       }
     } catch (error) {
       console.error("Error updating user", error);
+      setIsLoading(false);
       return;
     }
     
@@ -182,7 +195,7 @@ export const NewJobPage = () => {
       // Send notification to current user //
       try {
         const newNotification = {
-            content: `Created Job ${newJob?.jobId}`,
+            content: `Created Job ${newJob?.title}`,
             isDone: false,
             Userfor: currentUser.userId,
         }
@@ -196,14 +209,18 @@ export const NewJobPage = () => {
     } catch (err) {
       console.error(err);
     }
+    setIsLoading(false);
     navigate("/jobs");
-
   };
 
+
   return (
-    <MainTemplate currentNavigation={2}>
-    <div className="m-5 flex flex-col">
+    <MainTemplate currentNavigation={"new_job"}>
+    <div className="m-5 flex flex-col flex-grow justify-center">
       <div className="flex flex-col items-center justify-center m-5">
+      {isLoading ? (
+        <LoadingNewJob />
+      ) : (
         <Flex>
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -271,8 +288,8 @@ export const NewJobPage = () => {
             {newJob && <div>New Job Created: {JSON.stringify(newJob)}</div>}
           </form>
         </Flex>
+        )}
       </div>
-
     </div>
     </MainTemplate>
   );

@@ -7,17 +7,15 @@ export const MenuOptions = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="my-2">
-      <Menu>
-        <MenuItem
-          onClick={() => {
-            navigate("/profile");
-          }}
-        >
-          My Profile
-        </MenuItem>
-        <MenuItem onClick={logout}>Logout</MenuItem>
-      </Menu>
-    </div>
+    <Menu>
+      <MenuItem
+        onClick={() => {
+          navigate("/profile");
+        }}
+      >
+        My Profile
+      </MenuItem>
+      <MenuItem onClick={logout}>Logout</MenuItem>
+    </Menu>
   );
 };
