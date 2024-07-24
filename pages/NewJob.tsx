@@ -5,9 +5,9 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { type Schema } from "../amplify/data/resource";
 import MainTemplate from "../src/components/template/MainTemplate.tsx";
-import { ToastContainer, toast } from "react-toastify";
+// import { ToastContainer, toast } from "react-toastify";
 import LoadingNewJob from "../src/components/LoadingScreens/LoadingNewJob.tsx";
-import { TrendingUp, TroubleshootRounded } from "@mui/icons-material";
+// import { TrendingUp, TroubleshootRounded } from "@mui/icons-material";
 
 
 const client = generateClient<Schema>();

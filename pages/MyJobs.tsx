@@ -1,4 +1,4 @@
-import { generateClient, post } from "aws-amplify/data";
+import { generateClient } from "aws-amplify/data";
 import { type Schema } from "../amplify/data/resource";
 import { useState, useEffect } from "react";
 
@@ -312,7 +312,7 @@ export const MyJobsPage = () => {
         filter: filter,
       });
       setAcceptedBounty(acceptedBounties);
-      acceptedBounties.forEach((job) => updateClaimButtonStatus(job.id));
+      acceptedBounties.forEach((job: Bounty) => updateClaimButtonStatus(job.id));
     } else {
       console.error("current user has no accepted obs");
       return;
@@ -331,6 +331,15 @@ export const MyJobsPage = () => {
     setPostedBounty(postedBounties);
   };
 
+  const fetchCompletedBounties = async () => {
+    try {
+      const completedBounties = acceptedBounty.filter((bounty) => bounty.isDone);
+      setCompletedBounty(completedBounties);
+    } catch (error) {
+      console.error("Error filtering accepted bounties: ", error);
+    }
+  };
+  
   // Function to Claim Jobs  -- Checks if user is valid and updates users Wallet //
   const claimBounty = async (claimedBounty: string) => {
     const { data: acceptedJob } = await client.models.Jobs.get({
@@ -440,6 +449,7 @@ export const MyJobsPage = () => {
       try {
         fetchPostedBounties();
         fetchTakenBounties();
+        fetchCompletedBounties();
       } catch (error) {
         console.error("Error fetching bounties: ", error);
       }
@@ -473,17 +483,19 @@ export const MyJobsPage = () => {
       <div className="flex flex-col items-stretch justify-start flex-grow gap-10 m-10">
         <div className="flex flex-row gap-6">
           <SelectField
+            label ="Password"
             labelHidden
             width={"15rem"}
             value={category}
             textAlign={"start"}
-            onChange={(e) => setCategory(e.target.value)}
-          >
+            onChange={(e) => setCategory(e.target.value)} 
+          >           
             <option value="accepted">Accepted Jobs</option>
             <option value="posted">Posted Jobs</option>
             <option value="completed">Completed Jobs</option>
           </SelectField>
-          <SearchField textAlign={"start"} className="flex-grow" onChange={(e) => setSearch(e.target.value)}></SearchField>
+          <SearchField label ="Password" labelHidden textAlign={"start"} className="flex-grow" onChange={(e) => setSearch(e.target.value)} />
+          
         </div>
         <div className="flex flex-row flex-grow gap-16 justify-start items-start flex-wrap">
           {category === "accepted" &&

@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import { NavigationButtons } from "./NavigationButtons";
 import { MenuOptions } from "./MenuOptions";
 import { NotificationIcon } from "./NotificaitonIcon";
-import { Text, Image } from "@aws-amplify/ui-react";
+import { Image } from "@aws-amplify/ui-react";
 
 type MainTemplateProps = {
   children: ReactNode;

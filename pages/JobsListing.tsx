@@ -34,7 +34,7 @@ export const JobPage = () => {
     const inputRef = React.useRef<HTMLInputElement | null>(null);
     const searchButtonRef = React.useRef<HTMLButtonElement | null>(null);
     const navigate = useNavigate();
-
+    type Bounty = Schema["Jobs"]["type"];
     const [Jobs, setPosts] = useState<Jobs[]>([]);
 
     // Search feature, UNIMPLEMENTED YET -- to return inputRef into a filter // 
@@ -64,7 +64,7 @@ export const JobPage = () => {
       const fetchPosts = async () => {
         try { 
           const { data: fetchedJobs } = await client.models.Jobs.list();
-          fetchedJobs.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+          fetchedJobs.sort((a: Bounty, b: Bounty) => b.createdAt.localeCompare(a.createdAt));
           setPosts(fetchedJobs);
         } catch (error) {
           console.error('Error fetching posts: ', error);

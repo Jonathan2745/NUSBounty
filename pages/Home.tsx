@@ -1,52 +1,52 @@
 
 
-import { type Schema } from '../amplify/data/resource';
-import { generateClient } from "aws-amplify/data";
-import { useState, useEffect } from "react";
+// import { type Schema } from '../amplify/data/resource';
+// import { generateClient } from "aws-amplify/data";
+// import { useState, useEffect } from "react";
 import MainTemplate from "../src/components/template/MainTemplate.tsx";
-import { useAuthenticator, Image } from '@aws-amplify/ui-react';
+//import { useAuthenticator,
+import { Image } from '@aws-amplify/ui-react';
 
 export const HomePage = () => {
-  const { user } = useAuthenticator((context) => [context.user]); // Move this inside the component
+  // const { user } = useAuthenticator((context) => [context.user]); // Move this inside the component
 
-  // Generate useStates adn Schemas used for Home Page //
-  const client = generateClient<Schema>();
-  const [Notifications, setNotifications] = useState<Schema["Notifications"]["type"][]>([]);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  type User = Schema['User']['type'];
+  // // Generate useStates adn Schemas used for Home Page //
+  // const client = generateClient<Schema>();
+  // const [currentUser, setCurrentUser] = useState<User | null>(null);
+  // type User = Schema['User']['type'];
 
-  const fetchCurrentUser = async () => {
-    if (user) {
-      const { data: currentuser, errors } = await client.models.User.get({
-        userId: user.userId,
-      });
-      if (errors) {
-        console.error("User not found");
-      } else {
-        try {
-          setCurrentUser(currentuser);
-        } catch (error) {
-          console.error("Error setting current user", error);
-        }
-      }
-    } else {
-      console.error("No user found");
-    }
-  };
+  // const fetchCurrentUser = async () => {
+  //   if (user) {
+  //     const { data: currentuser, errors } = await client.models.User.get({
+  //       userId: user.userId,
+  //     });
+  //     if (errors) {
+  //       console.error("User not found");
+  //     } else {
+  //       try {
+  //         setCurrentUser(currentuser);
+  //       } catch (error) {
+  //         console.error("Error setting current user", error);
+  //       }
+  //     }
+  //   } else {
+  //     console.error("No user found");
+  //   }
+  // };
 
-  // Fetches Notifications assigned to currentUser //
-  const fetchNotifs = async () => {
-    if (currentUser && currentUser.userId) {
-      const { data: items } = await client.models.Notifications.list({
-        filter: {
-          Userfor: { eq: currentUser.userId }
-        }
-      });
-      setNotifications(items);
-    } else {
-      console.error("Error fetching notifications");
-    }
-  };
+  // // Fetches Notifications assigned to currentUser //
+  // const fetchNotifs = async () => {
+  //   if (currentUser && currentUser.userId) {
+  //     const { data: items } = await client.models.Notifications.list({
+  //       filter: {
+  //         Userfor: { eq: currentUser.userId }
+  //       }
+  //     });
+  //     setNotifications(items);
+  //   } else {
+  //     console.error("Error fetching notifications");
+  //   }
+  // };
   
   // // Testing Feature to allow currentUser to create Notifications for themselves //
   // const createNotif = async () => {
@@ -74,10 +74,10 @@ export const HomePage = () => {
   //   setNotifications(prev => prev.filter(notif => notif.id !== id));
   // }
 
-  useEffect(() => {
-    fetchNotifs();
-    fetchCurrentUser();
-  }, []);
+  // useEffect(() => {
+  //   fetchNotifs();
+  //   fetchCurrentUser();
+  // }, []);
 
   return (
     <MainTemplate currentNavigation={"home"}>
