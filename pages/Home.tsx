@@ -6,7 +6,7 @@
 import MainTemplate from "../src/components/template/MainTemplate.tsx";
 //import { useAuthenticator,
 import { Image } from '@aws-amplify/ui-react';
-
+import background from "../src/assets/Icons/Untitled.svg"
 export const HomePage = () => {
   // const { user } = useAuthenticator((context) => [context.user]); // Move this inside the component
 
@@ -85,7 +85,7 @@ export const HomePage = () => {
         <div className='w-full h-full flex items-center justify-center overflow-hidden'>
           <Image
             alt="NUSBounty Banner"
-            src="../../src/assets/Icons/Untitled.svg"
+            src={background}
             className="max-w-full max-h-full"
             style={{
               display: 'block',
