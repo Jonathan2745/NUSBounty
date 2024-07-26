@@ -21,8 +21,6 @@ import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 import { AuthProvider } from "./hooks/useAuth.js";
 
 
-
-
 function App() {
   return ( 
   <Authenticator.Provider>

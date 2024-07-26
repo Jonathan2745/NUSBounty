@@ -3,6 +3,7 @@ import { NavigationButtons } from "./NavigationButtons";
 import { MenuOptions } from "./MenuOptions";
 import { NotificationIcon } from "./NotificaitonIcon";
 import { Image } from "@aws-amplify/ui-react";
+import mimic from "../../src/assets/Icons/mimic.png"
 
 type MainTemplateProps = {
   children: ReactNode;
@@ -21,7 +22,7 @@ const MainTemplate: React.FC<MainTemplateProps> = ({
           <div className= "flex flex-row items-center gap-4">
           <Image
               alt="NUSBounty logo"
-              src="../../src/assets/Icons/mimic.png"
+              src={mimic}
               objectFit="initial"
               objectPosition="50% 50%"
               backgroundColor="initial"
