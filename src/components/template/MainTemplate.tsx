@@ -3,7 +3,7 @@ import { NavigationButtons } from "./NavigationButtons";
 import { MenuOptions } from "./MenuOptions";
 import { NotificationIcon } from "./NotificaitonIcon";
 import { Image } from "@aws-amplify/ui-react";
-import mimic from "../../src/assets/Icons/mimic.png"
+import mimic from "../../../src/assets/Icons/mimic.png"
 
 type MainTemplateProps = {
   children: ReactNode;
