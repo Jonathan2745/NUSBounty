@@ -26,12 +26,8 @@ const ProfilePage: React.FC = () => {
   const [currentBio, setCurrentBio] = useState<string>();
   const [editBio, setEditBio] = useState<boolean>(false);
 
-
   const acceptedFileTypes = ['image/png', 'image/jpeg'];
   const hiddenInput = useRef<HTMLInputElement | null>(null);
-
-
-
 
   const fetchBio = async () => {
     if ( currentUser ){
@@ -43,7 +39,6 @@ const ProfilePage: React.FC = () => {
     }
   }
 
-  
   const updateBio = async () => {
     const newBio = prompt("Insert new biography here: ", currentBio);
     if (currentUser) {
@@ -197,7 +192,7 @@ const ProfilePage: React.FC = () => {
           <StorageImage className="w-64 self-center rounded-full border-2"
               alt=" Profile Picture"
               path={({ identityId }) => `protected/${identityId}.jpg`}
-              fallbackSrc="default/mimic.png"
+              fallbackSrc="public/cat.jpg"
               onGetUrlError={(error) => console.error(error)}
             />
             {/* <img src="src/assets/icons/mimic.png" className="w-64 self-center rounded-full border-2" alt="Profile" /> */}
@@ -278,3 +273,19 @@ const ProfilePage: React.FC = () => {
 };
 
 export default ProfilePage;
+
+
+// import React, { useState, useEffect, useRef } from "react";
+// import { DropZone, useAuthenticator, Text, VisuallyHidden, Button, Input } from "@aws-amplify/ui-react";
+// // import { MdCheckCircle, MdFileUpload, MdRemoveCircle } from 'react-icons/md';
+// import { uploadData } from "aws-amplify/storage";
+// import '@aws-amplify/ui-react/styles.css';
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
+
+// import MainTemplate from "../src/components/template/MainTemplate";
+// import { type Schema } from '../amplify/data/resource';
+// import { generateClient } from 'aws-amplify/api';
+
+// import { StorageImage } from "@aws-amplify/ui-react-storage";
+

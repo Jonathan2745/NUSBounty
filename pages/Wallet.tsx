@@ -16,17 +16,6 @@ const Wallet = () => {
   // type WalletBalance = Schema['Jobs']['type'];
   const [balance, setWalletBalance] = useState<number | null>(null);
 
-  const fetchWalletBalance = async () => {
-    if (currentUser && currentUser.walletBalance) {
-      const currentBalance = currentUser.walletBalance;
-      setWalletBalance(currentBalance);
-    } else {
-      console.error("Failed to set Balance");
-    }
-  };
-  useEffect(() => {
-    fetchWalletBalance();
-  }, []);
 
   useEffect(() => {
     const sub = client.models.User.observeQuery().subscribe({
@@ -222,9 +211,24 @@ const Wallet = () => {
     }
   };
 
+  const fetchWalletBalance = async () => {
+    if (currentUser && currentUser.walletBalance) {
+      const currentBalance = currentUser.walletBalance;
+      setWalletBalance(currentBalance);
+    } else {
+      setWalletBalance(400);
+    }
+  };
+  
+
+
   useEffect(() => {
     fetchCurrentUser();
   }, []);
+
+  useEffect(() => {
+    fetchWalletBalance();
+  }, [currentUser]);
 
   useEffect(() => {
     const fetchBounties = async () => {

@@ -165,7 +165,7 @@ export const NotificationIcon = () => {
       }
     >
       {notifications.length > 0 ? (
-        <MenuItem isDisabled >Notifications</MenuItem>
+        <MenuItem isDisabled >Notifications (Click To Dismiss)</MenuItem>
       ) : (
         <MenuItem isDisabled>No New Notifications</MenuItem>
       )}

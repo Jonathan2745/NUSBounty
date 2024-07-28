@@ -26,6 +26,7 @@ const schema = a.schema({
       userToClaim : a.id().array(),
       acceptedBy: a.id().array(),
       location: a.string(),
+      profileImageKey: a.string(),
     })
     .authorization((allow) => [allow.authenticated()]),
 
