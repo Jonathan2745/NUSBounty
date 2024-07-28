@@ -7,7 +7,7 @@ import MainTemplate from "../src/components/template/MainTemplate.tsx";
 //import { useAuthenticator,
 import { Image } from '@aws-amplify/ui-react';
 import background from "../src/assets/Icons/Untitled.svg"
-export const HomePage = () => {
+const Home = () => {
   // const { user } = useAuthenticator((context) => [context.user]); // Move this inside the component
 
   // // Generate useStates adn Schemas used for Home Page //
@@ -81,21 +81,19 @@ export const HomePage = () => {
 
   return (
     <MainTemplate currentNavigation={"home"}>
-      <div className='flex flex-col items-center justify-center min-h-screen overflow-hidden'>
-        <div className='w-full h-full flex items-center justify-center overflow-hidden'>
-          <Image
-            alt="NUSBounty Banner"
-            src={background}
-            className="max-w-full max-h-full"
-            style={{
-              display: 'block',
-              margin: 'auto',
-              objectFit: 'contain',
-              width: '100%',
-              height: '100%',
-            }}
-          />
-        </div>
+      <div className='flex flex-col items-center justify-center overflow-hidden flex-grow'>
+        <Image
+          alt="NUSBounty Banner"
+          src={background}
+          className="max-w-full max-h-full"
+          style={{
+            display: 'block',
+            margin: 'auto',
+            objectFit: 'contain',
+            width: '100%',
+            height: '100%',
+          }}
+        />
       </div>
     </MainTemplate>
   );
@@ -128,3 +126,4 @@ export const HomePage = () => {
 //   );
 // };
 
+export default Home;

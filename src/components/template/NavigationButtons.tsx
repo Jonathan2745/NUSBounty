@@ -18,7 +18,7 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({ current })
     return "bg-white text-slate-500 text-center p-0 rounded-none border-white hover:border-white border-t-2 border-0 hover:text-slate-600 text-nowrap font-normal mr-3 hover:underline";
   }
 
-  const handleSecrets = () => {
+  const handleWallet = () => {
     setShouldNavigate(1);
   };
   const handleJobs = () => {
@@ -37,7 +37,7 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({ current })
 
   useEffect(() => {
     if (shouldNavigate == 1) {
-      navigate("/secret");
+      navigate("/wallet");
     }
     if ( shouldNavigate == 3 ) {
       navigate("/jobs");
@@ -60,7 +60,32 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({ current })
   };
 
   return (
-    <div className="flex flex-row gap-2.5 text-lg justify-start">
+    <div className="flex flex-row gap-2.5 text-lg justify-start flex-wrap">
+      <button
+        onClick={handleHome}
+        className={handleClasses("home")}
+      >
+        Home
+      </button>
+      <button
+        onClick={handleJobs}
+        className={handleClasses("jobs")}
+      >
+        Jobs
+      </button>
+      <button
+        onClick={handleMyJobs}
+        className={handleClasses("my_jobs")}
+      >
+        My Jobs
+      </button>
+      <button
+        onClick={handleNewJob}
+        className={handleClasses("new_job")}
+      >
+        Create Job
+      </button>
+      
       <button
         onClick={handleProfile}
         className={handleClasses("profile")}
@@ -68,35 +93,10 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({ current })
         Profile
       </button>
       <button
-        onClick={handleSecrets}
+        onClick={handleWallet}
         className={handleClasses("wallet")}
       >
-        My Wallet
-      </button>
-      <button
-        onClick={handleJobs}
-        className={handleClasses("jobs")}
-      >
-        Jobs Page
-      </button>
-      <button
-        onClick={handleNewJob}
-        className={handleClasses("new_job")}
-      >
-        Create New Job
-      </button>
-      
-      <button
-        onClick={handleHome}
-        className={handleClasses("home")}
-      >
-        Home Page
-      </button>
-      <button
-        onClick={handleMyJobs}
-        className={handleClasses("my_jobs")}
-      >
-        My Jobs Page
+        Wallet
       </button>
       <button
         onClick={signOut}

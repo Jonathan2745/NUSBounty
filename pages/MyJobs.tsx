@@ -1,19 +1,27 @@
 import { generateClient } from "aws-amplify/data";
 import { type Schema } from "../amplify/data/resource";
 import { useState, useEffect } from "react";
+import { CiLocationOn, CiMoneyBill, CiCalendar, CiTimer } from "react-icons/ci";
+import { IoPeopleOutline } from "react-icons/io5";
+import { MdOutlineDoneAll, MdOutlineRemoveDone, MdOutlineDelete, MdOutlineCancel } from "react-icons/md";
+import { TbReportMoney } from "react-icons/tb";
 
 import MainTemplate from "../src/components/template/MainTemplate.tsx";
 
-import { SearchField, SelectField, useAuthenticator } from "@aws-amplify/ui-react";
-
-import { Button } from "@aws-amplify/ui-react";
+import {
+  SearchField,
+  SelectField,
+  useAuthenticator,
+} from "@aws-amplify/ui-react";
+import { useNavigate } from "react-router-dom";
 
 const client = generateClient<Schema>();
 
-export const MyJobsPage = () => {
+const MyJobsPage = () => {
   // Set up the Queries for the Jobs Taken //
   type Bounty = Schema["Jobs"]["type"];
   type User = Schema["User"]["type"];
+  const navigate = useNavigate();
   const { user } = useAuthenticator((context) => [context.user]);
 
   const [acceptedBounty, setAcceptedBounty] = useState<Bounty[]>([]);
@@ -115,6 +123,7 @@ export const MyJobsPage = () => {
     }
     fetchPostedBounties();
     fetchTakenBounties();
+    fetchCompletedBounties();
   };
 
   // Completion of Bounty //
@@ -185,6 +194,9 @@ export const MyJobsPage = () => {
         }
       } else {
         console.log("Job with ID ${id} not found");
+        // INSERT REACT TOAST HERE FOR NO ONE ACCEPTED AND ONE MORE OR JOB DOES NOT EXIST ??? //
+
+  
       }
     } catch (error) {
       console.error("Error completing job:", error);
@@ -192,6 +204,7 @@ export const MyJobsPage = () => {
 
     fetchPostedBounties();
     fetchTakenBounties();
+    fetchCompletedBounties();
   };
 
   // Cancellation of Bounty //
@@ -285,11 +298,13 @@ export const MyJobsPage = () => {
     }
     fetchPostedBounties();
     fetchTakenBounties();
+    fetchCompletedBounties();
   };
 
   // Queries for Taken bounties
   const fetchTakenBounties = async () => {
     // return list of user taken bounties //
+    console.log("fetching Taken Bounties");
     if (currentUser?.acceptedJobs) {
       const userTakenBounties = currentUser.acceptedJobs;
 
@@ -312,7 +327,9 @@ export const MyJobsPage = () => {
         filter: filter,
       });
       setAcceptedBounty(acceptedBounties);
-      acceptedBounties.forEach((job: Bounty) => updateClaimButtonStatus(job.id));
+      acceptedBounties.forEach((job: Bounty) =>
+        updateClaimButtonStatus(job.id)
+      );
     } else {
       console.error("current user has no accepted obs");
       return;
@@ -321,6 +338,7 @@ export const MyJobsPage = () => {
 
   // Set up Queries for the Jobs Posted //
   const fetchPostedBounties = async () => {
+    console.log("fetching Posted Bounties");
     const { data: postedBounties } = await client.models.Jobs.list({
       filter: {
         createdBy: {
@@ -332,14 +350,17 @@ export const MyJobsPage = () => {
   };
 
   const fetchCompletedBounties = async () => {
+    console.log("fetching completed Bounties");
     try {
-      const completedBounties = acceptedBounty.filter((bounty) => bounty.isDone);
+      const completedBounties = acceptedBounty.filter(
+        (bounty) => bounty.isDone
+      );
       setCompletedBounty(completedBounties);
     } catch (error) {
       console.error("Error filtering accepted bounties: ", error);
     }
   };
-  
+
   // Function to Claim Jobs  -- Checks if user is valid and updates users Wallet //
   const claimBounty = async (claimedBounty: string) => {
     const { data: acceptedJob } = await client.models.Jobs.get({
@@ -447,8 +468,8 @@ export const MyJobsPage = () => {
   useEffect(() => {
     const fetchBounties = async () => {
       try {
-        fetchPostedBounties();
-        fetchTakenBounties();
+        await fetchPostedBounties();
+        await fetchTakenBounties();
         fetchCompletedBounties();
       } catch (error) {
         console.error("Error fetching bounties: ", error);
@@ -456,6 +477,10 @@ export const MyJobsPage = () => {
     };
     fetchBounties();
   }, [currentUser]);
+
+  useEffect(() => {
+    fetchCompletedBounties();
+  }, [acceptedBounty]);
 
   useEffect(() => {
     const result: Bounty[] = acceptedBounty.filter(
@@ -466,7 +491,8 @@ export const MyJobsPage = () => {
 
   useEffect(() => {
     const result: Bounty[] = postedBounty.filter(
-      (job) => job && job.title && job.title.includes(search)
+      (job) => job && ((job.title && job.title.toLowerCase().includes(search.toLowerCase()) ||
+                (job.content && job.content.toLowerCase().includes(search.toLowerCase()))))
     );
     setFilteredPostedBounty(result);
   }, [search, postedBounty]);
@@ -478,127 +504,280 @@ export const MyJobsPage = () => {
     setFilteredCompletedBounty(result);
   }, [search, completedBounty]);
 
+
   return (
     <MainTemplate currentNavigation={"my_jobs"}>
-      <div className="flex flex-col items-stretch justify-start flex-grow gap-10 m-10">
+      <div className="flex flex-col items-stretch justify-start flex-grow gap-8">
         <div className="flex flex-row gap-6">
           <SelectField
-            label ="Password"
+            label="Category"
             labelHidden
             width={"15rem"}
             value={category}
             textAlign={"start"}
-            onChange={(e) => setCategory(e.target.value)} 
-          >           
+            onChange={(e) => setCategory(e.target.value)}
+          >
             <option value="accepted">Accepted Jobs</option>
             <option value="posted">Posted Jobs</option>
             <option value="completed">Completed Jobs</option>
           </SelectField>
-          <SearchField label ="Password" labelHidden textAlign={"start"} className="flex-grow" onChange={(e) => setSearch(e.target.value)} />
-          
+          <SearchField
+            label="Search"
+            labelHidden
+            textAlign={"start"}
+            className="flex-grow"
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
-        <div className="flex flex-row flex-grow gap-16 justify-start items-start flex-wrap">
+        { ((category === "accepted" && filteredAcceptedBounty.length <= 0) ||
+          (category === "posted" && filteredPostedBounty.length <= 0) ||
+          (category === "completed" && filteredCompletedBounty.length <= 0)) &&
+          <p className="self-center flex-grow mx-auto text-2xl font-semibold text-gray-500">
+            No jobs available
+          </p>
+        }
+        <div className="grid grid-cols-5 gap-5">
+          <div className="col-span-5 grid grid-flow-row gap-5">
           {category === "accepted" &&
-            filteredAcceptedBounty.map((job) => (
-              <div className="flex flex-col gap-3 border-2 p-4 rounded-xl border-gray-400">
-                <h3 className="text-xl font-bold text-gray-900">{job.title}</h3>
-                <p className="text-gray-800">{job.content}</p>
-                <p className="text-gray-800">Bounty: ${job.bounty}</p>
-                <div className="flex flex-row gap-2">
-                  <p className="text-sm text-gray-800">
-                    Start Time: {job.timeStart}
-                  </p>
-                  <p className="text-sm text-gray-800">
-                    End Time: {job.timeEnd}
-                  </p>
+            (filteredAcceptedBounty.length > 0 && (
+              filteredAcceptedBounty.map((job) => (
+              <div
+                className="flex flex-col gap-3 border-2 p-6 rounded-lg border-gray-400"
+                key={job.id}
+              >
+                <div className="flex flex-row items-center gap-4">
+                  <div>
+                    <img src="../src/assets/Icons/mimic.png" className="w-14 bg-gray-300 rounded-md" alt="" />
+                  </div>
+                  <div className="flex-grow flex flex-col items-start justify-between self-stretch py-1">
+                    <p className="text-xl font-semibold">{job.title}</p>
+                    <p className="text-sm text-gray-400">{currentUser?.username}</p>
+                  </div>
+                  <div className="flex flex-col items-end justify-between self-stretch gap-1 py-1">
+                    <p className="text-sm text-gray-400">Posted today</p>
+                    <button onClick={()=> navigate(`/jobs/${job.id}`)}className="p-1 border-0 border-gray-300 hover:border-gray-500 group flex flex-row gap-2 bg-white">
+                      <p className="text-sm text-gray-400 group-hover:text-gray-600">More Details &raquo;</p>
+                    </button>
+                  </div>
+                  
                 </div>
-                <div className="flex flex-row gap-2">
-                  <p className="text-sm text-gray-800">
-                    Created by: {job.createdBy}
-                  </p>
-                  <p className="text-sm text-gray-800">
-                    Completed? : {job.isDone ? "yes" : "no"}
-                  </p>
-                  {/* Add more job details as needed */}
-                </div>
-                <div className="flex flex-row gap-2">
-                  <Button
-                    variation="primary"
-                    width="10rem"
-                    onClick={() => claimBounty(job.id)}
-                    disabled={!claimButtonStatuses[job.id]}
-                    className="right-0"
-                    style={{ bottom: "4px" }}
-                  >
-                    Claim bounty
-                  </Button>
-                  <Button onClick={() => cancelBounty(job.id)}>
-                    Cancel Accepting Bounty
-                  </Button>
+                <p className="line-clamp-3 text-left" style={{height: "4.5em"}}>
+                  {job.content}
+                </p>
+                <hr className="border-t-2 border-gray-300"/>
+                <div className="grid grid-cols-6 items-center gap-2">
+                  <div className="flex flex-row items-center gap-2 col-span-3">
+                    <CiCalendar className="fill-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                    <p className="text-sm text-gray-500 text-left">Date: {job.DateStart} - {job.DateEnd}</p>
+                  </div>
+                  <div className="flex flex-row items-center gap-2 col-span-3">
+                    <CiTimer className="fill-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                    <p className="text-sm text-gray-500">Time: {job.timeStart} - {job.timeEnd}</p>
+                  </div>
+                  <div className="col-span-6">
+                    <hr className="border-t-2 border-gray-300"/>
+                  </div>
+                  <div className="flex flex-row items-center gap-2 col-span-2">
+                    <CiMoneyBill className="fill-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                    <p className="text-sm text-gray-500">${job.bounty}</p>
+                    </div>
+                  <div className="flex flex-row items-center gap-2 col-span-2">
+                    <CiLocationOn className="fill-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                    <p className="text-sm text-gray-500">{job.location}</p>
+                  </div>
+                  <div className="flex flex-row items-center gap-2 col-span-2">
+                    { job.isDone &&
+                      <div className="p-2 border-2 border-white w-full h-full flex flex-row gap-2 bg-white">
+                        <MdOutlineDoneAll className="fill-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                        <p className="text-sm text-gray-500">Complete</p>
+                      </div>
+                    }
+                    { (!job.isDone) &&
+                      <div className="p-2 border-2 border-white w-full h-full flex flex-row gap-2 bg-white">
+                        <MdOutlineRemoveDone className="fill-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                        <p className="text-sm text-gray-500">Not Completed</p>
+                      </div>
+                    }
+                  </div>
+                  <div className="flex flex-row items-center gap-2 col-span-3">
+                    { claimButtonStatuses[job.id] ?
+                    (<button onClick={() => claimBounty(job.id)}
+                      className="p-2 border-2 border-gray-300 hover:border-gray-500 group w-full h-full flex flex-row gap-2 bg-white">
+                      <TbReportMoney className="stroke-gray-500 group-hover:stroke-gray-600" style={{height: "1.2rem", width: "1.2rem"}} />
+                      <p className="text-sm text-gray-500 group-hover:text-gray-600">Claim Bounty?</p>
+                    </button>)
+                    :
+                    <div className="py-2 border-2 border-white w-full h-full flex flex-row gap-2 bg-white">
+                      <TbReportMoney className="stroke-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                      <p className="text-sm text-gray-500">Bounty Claimed</p>
+                    </div>
+                    }
+                  </div>
+                  <div className="flex flex-row items-center gap-2 col-span-3">
+                    <button onClick={() => cancelBounty(job.id)} className="p-2 border-2 border-gray-300 hover:border-gray-500 group w-full h-full flex flex-row gap-2 bg-white">
+                      <MdOutlineCancel className="fill-gray-500 group-hover:fill-gray-600" style={{height: "1.2rem", width: "1.2rem"}} />
+                      <p className="text-sm text-gray-500 group-hover:text-gray-600">Cancel Bounty?</p>
+                    </button>
+                  </div>
                 </div>
               </div>
+                 
+              ))
             ))}
+
           {category === "posted" &&
-            filteredPostedBounty.map((job) => (
-              <div className="flex flex-col gap-3 border-2 p-4 rounded-xl border-gray-400">
-                <h3 className="text-xl font-bold text-gray-900">{job.title}</h3>
-                <p className="text-gray-800">{job.content}</p>
-                <p className="text-gray-800">Bounty: ${job.bounty}</p>
-                <div className="flex flex-row gap-2">
-                  <p className="text-sm text-gray-800">
-                    Start Time: {job.timeStart}
-                  </p>
-                  <p className="text-sm text-gray-800">
-                    End Time: {job.timeEnd}
-                  </p>
-                </div>
-                <div className="flex flex-row gap-2">
-                  <p className="text-sm text-gray-800">
-                    Positions filled: {job.numBooked} / {job.numberOfPax}
-                  </p>
-                  {/* Add more job details as needed */}
-                  <p className="text-sm text-gray-800">
-                    Completed? :{job.isDone ? "Yes" : "No "}
-                  </p>
-                </div>
-                <div className="flex flex-row gap-2">
-                  <Button onClick={() => deleteBounty(job.id)}>Delete</Button>
-                  <Button onClick={() => completeBounty(job.id)}>
-                    Bounty Completed
-                  </Button>
-                </div>
-              </div>
-            ))}
-            {category === "completed" &&
-                filteredCompletedBounty.map((job) => (
-                  <div className="flex flex-col gap-3 border-2 p-4 rounded-xl border-gray-400">
-                    <h3 className="text-xl font-bold text-gray-900">{job.title}</h3>
-                    <p className="text-gray-800">{job.content}</p>
-                    <p className="text-gray-800">Bounty: ${job.bounty}</p>
-                    <div className="flex flex-row gap-2">
-                      <p className="text-sm text-gray-800">
-                        Start Time: {job.timeStart}
-                      </p>
-                      <p className="text-sm text-gray-800">
-                        End Time: {job.timeEnd}
-                      </p>
+            (filteredPostedBounty.length > 0 && (
+              filteredPostedBounty.map((job) => (
+                <div
+                  className="flex flex-col gap-3 border-2 p-6 rounded-lg border-gray-400"
+                  key={job.id}
+                >
+                  <div className="flex flex-row items-center gap-4">
+                    <div>
+                      <img src="../src/assets/Icons/mimic.png" className="w-14 bg-gray-300 rounded-md" alt="" />
                     </div>
-                    <div className="flex flex-row gap-2">
-                      <p className="text-sm text-gray-800">
-                        Positions filled: {job.numBooked} / {job.numberOfPax}
-                      </p>
-                      {/* Add more job details as needed */}
-                      <p className="text-sm text-gray-800">
-                        Completed? :{job.isDone ? "Yes" : "No "}
-                      </p>
+                    <div className="flex-grow flex flex-col items-start justify-between self-stretch py-1">
+                      <p className="text-xl font-semibold">{job.title}</p>
+                      <p className="text-sm text-gray-400">{currentUser?.username}</p>
                     </div>
-                    <div className="flex flex-row gap-2">
+                    <div className="flex flex-col items-end justify-between self-stretch gap-1 py-1">
+                      <p className="text-sm text-gray-400">Posted today</p>
+                      <button onClick={()=> navigate(`/jobs/${job.id}`)}className="p-1 border-0 border-gray-300 hover:border-gray-500 group flex flex-row gap-2 bg-white">
+                        <p className="text-sm text-gray-400 group-hover:text-gray-600">More Details &raquo;</p>
+                      </button>
+                    </div>
+                    
+                  </div>
+                  <p className="line-clamp-3 text-left" style={{height: "4.5em"}}>
+                    {job.content}
+                  </p>
+                  <hr className="border-t-2 border-gray-300"/>
+                  <div className="grid grid-cols-6 items-center gap-2">
+                    <div className="flex flex-row items-center gap-2 col-span-3">
+                      <CiCalendar className="fill-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                      <p className="text-sm text-gray-500 text-left">Date: {job.DateStart} - {job.DateEnd}</p>
+                    </div>
+                    <div className="flex flex-row items-center gap-2 col-span-3">
+                      <CiTimer className="fill-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                      <p className="text-sm text-gray-500">Time: {job.timeStart} - {job.timeEnd}</p>
+                    </div>
+                    <div className="col-span-6">
+                      <hr className="border-t-2 border-gray-300"/>
+                    </div>
+                    <div className="flex flex-row items-center gap-2 col-span-2">
+                      <CiMoneyBill className="fill-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                      <p className="text-sm text-gray-500">${job.bounty}</p>
+                      </div>
+                    <div className="flex flex-row items-center gap-2 col-span-2">
+                      <CiLocationOn className="fill-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                      <p className="text-sm text-gray-500">{job.location}</p>
+                    </div>
+                    <div className="flex flex-row items-center gap-2 col-span-2">
+                      { job.isDone &&
+                        <div className="p-2 border-2 border-white w-full h-full flex flex-row gap-2 bg-white">
+                          <MdOutlineDoneAll className="fill-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                          <p className="text-sm text-gray-500">Complete</p>
+                        </div>
+                      }
+                      { (!job.isDone && job.numBooked!==0) &&
+                        <button onClick={() => completeBounty(job.id)} className="p-2 border-2 border-gray-300 hover:border-gray-500 group w-full h-full flex flex-row gap-2 bg-white">
+                          <MdOutlineRemoveDone className="fill-gray-500 group-hover:fill-gray-600" style={{height: "1.2rem", width: "1.2rem"}} />
+                          <p className="text-sm text-gray-500 group-hover:text-gray-600">Mark as Complete?</p>
+                        </button>
+                      }
+                      { (!job.isDone && job.numBooked===0) &&
+                        <div className="p-2 border-2 border-white w-full h-full flex flex-row gap-2 bg-white">
+                          <MdOutlineRemoveDone className="fill-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                          <p className="text-sm text-gray-500">Not Completed</p>
+                        </div>
+                      }
+                    </div>
+                    <div className="flex flex-row items-center gap-2 col-span-4">
+                      <IoPeopleOutline className="stroke-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                      <p className="text-sm text-gray-500">Positions Filled: {job.numBooked} / {job.numberOfPax}</p>
+                    </div>
+                    <div className="flex flex-row items-center gap-2 col-span-2">
+                      <button onClick={() => deleteBounty(job.id)} className="p-2 border-2 border-gray-300 hover:border-gray-500 group w-full h-full flex flex-row gap-2 bg-white">
+                        <MdOutlineDelete className="fill-gray-500 group-hover:fill-gray-600" style={{height: "1.2rem", width: "1.2rem"}} />
+                        <p className="text-sm text-gray-500 group-hover:text-gray-600">Delete Bounty?</p>
+                      </button>
                     </div>
                   </div>
-                ))
-            }
+                </div>
+              ))
+            ))
+          }
+
+          {category === "completed" &&
+            (filteredCompletedBounty.length > 0 && (
+              filteredCompletedBounty.map((job) => (
+                <div
+                className="flex flex-col gap-3 border-2 p-6 rounded-lg border-gray-400"
+                key={job.id}
+              >
+                <div className="flex flex-row items-center gap-4">
+                  <div>
+                    <img src="../src/assets/Icons/mimic.png" className="w-14 bg-gray-300 rounded-md" alt="" />
+                  </div>
+                  <div className="flex-grow flex flex-col items-start justify-between self-stretch py-1">
+                    <p className="text-xl font-semibold">{job.title}</p>
+                    <p className="text-sm text-gray-400">{currentUser?.username}</p>
+                  </div>
+                  <div className="flex flex-col items-end justify-between self-stretch gap-1 py-1">
+                    <p className="text-sm text-gray-400">Posted today</p>
+                    <button onClick={()=> navigate(`/jobs/${job.id}`)}className="p-1 border-0 border-gray-300 hover:border-gray-500 group flex flex-row gap-2 bg-white">
+                      <p className="text-sm text-gray-400 group-hover:text-gray-600">More Details &raquo;</p>
+                    </button>
+                  </div>
+                  
+                </div>
+                <p className="line-clamp-3 text-left" style={{height: "4.5em"}}>
+                  {job.content}
+                </p>
+                <hr className="border-t-2 border-gray-300"/>
+                <div className="grid grid-cols-6 items-center gap-2">
+                  <div className="flex flex-row items-center gap-2 col-span-3">
+                    <CiCalendar className="fill-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                    <p className="text-sm text-gray-500 text-left">Date: {job.DateStart} - {job.DateEnd}</p>
+                  </div>
+                  <div className="flex flex-row items-center gap-2 col-span-3">
+                    <CiTimer className="fill-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                    <p className="text-sm text-gray-500">Time: {job.timeStart} - {job.timeEnd}</p>
+                  </div>
+                  <div className="col-span-6">
+                    <hr className="border-t-2 border-gray-300"/>
+                  </div>
+                  <div className="flex flex-row items-center gap-2 col-span-2">
+                    <CiMoneyBill className="fill-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                    <p className="text-sm text-gray-500">${job.bounty}</p>
+                    </div>
+                  <div className="flex flex-row items-center gap-2 col-span-2">
+                    <CiLocationOn className="fill-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                    <p className="text-sm text-gray-500">{job.location}</p>
+                  </div>
+                  
+                  <div className="flex flex-row items-center gap-2 col-span-2">
+                    { claimButtonStatuses[job.id] ?
+                    (<button onClick={() => claimBounty(job.id)}
+                      className="p-2 border-2 border-gray-300 hover:border-gray-500 group w-full h-full flex flex-row gap-2 bg-white">
+                      <TbReportMoney className="stroke-gray-500 group-hover:stroke-gray-600" style={{height: "1.2rem", width: "1.2rem"}} />
+                      <p className="text-sm text-gray-500 group-hover:text-gray-600">Claim Bounty?</p>
+                    </button>)
+                    :
+                    <div className="py-2 border-2 border-white w-full h-full flex flex-row gap-2 bg-white">
+                      <TbReportMoney className="stroke-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
+                      <p className="text-sm text-gray-500">Bounty Claimed</p>
+                    </div>
+                    }
+                  </div>
+                </div>
+              </div>
+              ))
+            ))}
+            </div>
         </div>
       </div>
     </MainTemplate>
   );
 };
+export default MyJobsPage;

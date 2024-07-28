@@ -15,10 +15,10 @@ const MainTemplate: React.FC<MainTemplateProps> = ({
     currentNavigation
     }) => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col px-4 pb-4 min-h-screen">
       {/* Add your header component here */}
       <header className="w-full">
-        <div className="flex flex-row justify-between mx-4 items-start gap-36">
+        <div className="flex flex-row justify-between items-start gap-36">
           <div className= "flex flex-row items-center gap-4">
           <Image
               alt="NUSBounty logo"
@@ -29,7 +29,7 @@ const MainTemplate: React.FC<MainTemplateProps> = ({
               height="auto"
               width="6rem"
               opacity="100%"
-              onClick={() => alert("/home")}
+              onClick={() => alert("hi")}
             />
             <h1 className="font-light text-3xl">NUS B&#10683;unty</h1>
           </div>
@@ -43,7 +43,7 @@ const MainTemplate: React.FC<MainTemplateProps> = ({
         </div>
       </header>
 
-      <main className="p-4 w-full flex-grow mr-44 mb-12 flex flex-col">{children}</main>
+      <main className="p-4 flex-grow flex flex-col">{children}</main>
     </div>
   );
 };

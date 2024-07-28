@@ -37,6 +37,8 @@ interface FormData {
   timeStart: string;
   timeEnd: string;
   DateStart: string;
+  DateEnd: string;
+  location: string;
 }
 
 // Define the type for the new job response
@@ -50,13 +52,16 @@ interface NewJob {
   bounty?: number | null; // Adjusted to allow for null values
   DateCreated?: string | null; // Adjusted to allow for null values
   createdBy?: string | null; // Adjusted to allow for null values
+  createdByDisplayed?: string | null;
   duration?: number | null; // Adjusted to allow for null values
   timeStart?: string | null; // Adjusted to allow for null values
   timeEnd?: string | null; // Adjusted to allow for null values
   DateStart?: string | null;
+  DateEnd?: string | null;
+  location? : string | null;
 }
 
-export const NewJobPage = () => {
+const NewJobPage = () => {
   const { user } = useAuthenticator((context) => [context.user]);
   const { authStatus } = useAuthenticator((context) => [context.authStatus]);
 
@@ -183,10 +188,12 @@ export const NewJobPage = () => {
         bounty: formData.bounty,
         DateCreated: new Date().toISOString(),
         createdBy: user.username,
+        createdByDisplayed: currentUser.username,
         duration: jobDuration,
         timeStart: formData.timeStart,
         timeEnd: formData.timeEnd,
         DateStart: formData.DateStart,
+        location: formData.location
       });
 
       
@@ -243,8 +250,16 @@ export const NewJobPage = () => {
                 isRequired
               />
             </div>
+            <div className="flex flex-col gap-1">
+              <Label>Location:</Label>
+              <Input
+                placeholder="Location"
+                {...register("location")}
+                isRequired
+              />
+            </div>
             <div className="flex flex-row gap-4 justify-center">
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1 flex-grow">
                 <Label>Number of Pax Required:</Label>
                 <Input
                   placeholder="Number of Pax"
@@ -253,7 +268,7 @@ export const NewJobPage = () => {
                   isRequired
                 />
               </div>
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1 flex-grow">
                 <Label>Bounty per pax:</Label>
                 <Input
                   placeholder="Bounty"
@@ -263,18 +278,27 @@ export const NewJobPage = () => {
                 />
               </div>
             </div>
-            <div>
-              <Label>Date:</Label>
-              <Input {...register("DateStart")} type="date" isRequired />
-            </div>
-
-            <div className="flex flex-row gap-4 justify-center">
-              <div className="flex flex-col flex-grow">
-                <Label>Start Time:</Label>
+            
+            <div className="flex flex-row gap-4 justify-center items-center mt-4">
+              <div className="w-8 text-left">
+                Start: 
+              </div>
+              <div className="flex-grow">
+                <Input {...register("DateStart")} type="date" isRequired />
+              </div>
+              <div className="flex flex-col">
                 <Input {...register("timeStart")} type="time" isRequired />
               </div>
-              <div className="flex flex-col flex-grow">
-                <Label>End Time:</Label>
+            </div>
+
+            <div className="flex flex-row gap-4 justify-center mb-4">
+            <div className="w-8 text-left">
+                End: 
+              </div>
+              <div className="flex-grow">
+                <Input {...register("DateEnd")} type="date" isRequired />
+              </div>
+              <div className="flex flex-col">
                 <Input {...register("timeEnd")} type="time" isRequired />
               </div>
             </div>
@@ -294,3 +318,5 @@ export const NewJobPage = () => {
     </MainTemplate>
   );
 };
+
+export default NewJobPage;

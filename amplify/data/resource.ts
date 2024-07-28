@@ -17,12 +17,15 @@ const schema = a.schema({
       bounty: a.integer(),
       DateCreated: a.datetime(),
       createdBy: a.string(),
+      createdByDisplayed: a.string(),
       duration: a.integer(),
       timeStart: a.time(),
       timeEnd: a.time(),
       DateStart: a.date(),
+      DateEnd: a.date(),
       userToClaim : a.id().array(),
       acceptedBy: a.id().array(),
+      location: a.string(),
     })
     .authorization((allow) => [allow.authenticated()]),
 
@@ -36,6 +39,7 @@ const schema = a.schema({
     bankNumber: a.integer(),
     acceptedJobs: a.id().array(),
     notifications: a.string().array(),
+    bio: a.string(),
   })
   .identifier(['userId'])
   .authorization((allow) => [allow.owner()]),
