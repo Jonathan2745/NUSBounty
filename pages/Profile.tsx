@@ -26,6 +26,7 @@ const ProfilePage: React.FC = () => {
   const [currentBio, setCurrentBio] = useState<string>();
   const [editBio, setEditBio] = useState<boolean>(false);
 
+
   const acceptedFileTypes = ['image/png', 'image/jpeg'];
   const hiddenInput = useRef<HTMLInputElement | null>(null);
 
@@ -160,7 +161,7 @@ const ProfilePage: React.FC = () => {
       try {
         // set loading //
         await uploadData({
-          path: `public/${identityId}/${file.name}`,
+          path: `public/${identityId}`,
           data: file
         });
         // end loading //
@@ -196,7 +197,7 @@ const ProfilePage: React.FC = () => {
           <StorageImage className="w-64 self-center rounded-full border-2"
               alt=" Profile Picture"
               path={({ identityId }) => `protected/${identityId}.jpg`}
-              fallbackSrc="default/profile.svg"
+              fallbackSrc="default/mimic.png"
               onGetUrlError={(error) => console.error(error)}
             />
             {/* <img src="src/assets/icons/mimic.png" className="w-64 self-center rounded-full border-2" alt="Profile" /> */}
@@ -235,12 +236,14 @@ const ProfilePage: React.FC = () => {
               </tr>
               <tr>
                 <td className="text-right">Email: </td>
-                <td className="text-left">Test Email</td>
+                <td className="text-left">{identityId}</td>
               </tr>
               <tr>
                 <td className="text-right">Biography: </td>
+                <td className="text-left">
                 {!editBio && <>{currentBio}</> }
                 {editBio && <Input value={currentBio}/> }
+                </td>
               </tr>
             </table>
             {!toggleEdit && <Button onClick={()=>setToggleEdit(true)}>Edit Username</Button>}

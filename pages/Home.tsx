@@ -7,6 +7,11 @@ import MainTemplate from "../src/components/template/MainTemplate.tsx";
 //import { useAuthenticator,
 import { Image } from '@aws-amplify/ui-react';
 import background from "../src/assets/Icons/Untitled.svg"
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
+
 const Home = () => {
   // const { user } = useAuthenticator((context) => [context.user]); // Move this inside the component
 
@@ -79,6 +84,26 @@ const Home = () => {
   //   fetchCurrentUser();
   // }, []);
 
+
+  const loadingUser = () => {
+    toast('Loading Page...', {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
+
+  useEffect(() => {
+    loadingUser();
+  }, []);
+
+
+
   return (
     <MainTemplate currentNavigation={"home"}>
       <div className='flex flex-col items-center justify-center overflow-hidden flex-grow'>
@@ -95,6 +120,16 @@ const Home = () => {
           }}
         />
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable={false}
+        theme="light"
+      />
     </MainTemplate>
   );
 };

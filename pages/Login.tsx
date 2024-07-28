@@ -35,6 +35,8 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const [showWelcome, setShowWelcome] = useState(true);
   const [userUsername, setUserUsername] = useState("");
+  const [identityId, setIdentityId] = useState<string | null>(null);
+
 
   useEffect(() => {
     if (user) {
@@ -54,6 +56,22 @@ const Login: React.FC = () => {
     }
   }, [userUsername, navigate]);
 
+
+  useEffect(() => {
+    const fetchIdentityId = async () => {
+      try {
+        if (user.signInDetails?.loginId) {
+          const identityId = user.signInDetails.loginId.toString();
+          setIdentityId(identityId);
+        }
+      } catch (error) {
+        console.error("Error fetching user identity ID:", error);
+      }
+    };
+
+    fetchIdentityId();
+  }, [user]);
+
   return (
     <Authenticator.Provider>
       <div className='flex flex-col justify-center items-center min-h-screen min-w-full'>
@@ -62,7 +80,7 @@ const Login: React.FC = () => {
         <Authenticator>
           {({ user }) => (
             <main>
-              {showWelcome && <h1>Hello {user?.username}</h1>}
+              {showWelcome && <h1>Hello {user ? identityId : identityId}</h1>}
             </main>
           )}
         </Authenticator>
