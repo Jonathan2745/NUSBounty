@@ -10,6 +10,8 @@ import MainTemplate from "../src/components/template/MainTemplate";
 import { type Schema } from '../amplify/data/resource';
 import { generateClient } from 'aws-amplify/api';
 
+import { StorageImage } from "@aws-amplify/ui-react-storage";
+
 const client = generateClient<Schema>();
 
 const ProfilePage: React.FC = () => {
@@ -26,6 +28,8 @@ const ProfilePage: React.FC = () => {
 
   const acceptedFileTypes = ['image/png', 'image/jpeg'];
   const hiddenInput = useRef<HTMLInputElement | null>(null);
+
+
 
 
   const fetchBio = async () => {
@@ -189,8 +193,13 @@ const ProfilePage: React.FC = () => {
         <h1 className="text-5xl mb-6 font-semibold">Profile</h1>
         <div className="flex flex-row justify-center gap-8">
           <div className="flex flex-col gap-3 justify-center">
-             {/* <StorageImage alt="Profile Picture" className="w-72 rounded-full border-4" path={"public/cat.jpg"} /> */}
-            <img src="src/assets/icons/mimic.png" className="w-64 self-center rounded-full border-2" alt="Profile" />
+          <StorageImage className="w-64 self-center rounded-full border-2"
+              alt=" Profile Picture"
+              path={({ identityId }) => `protected/${identityId}.jpg`}
+              fallbackSrc="default/profile.svg"
+              onGetUrlError={(error) => console.error(error)}
+            />
+            {/* <img src="src/assets/icons/mimic.png" className="w-64 self-center rounded-full border-2" alt="Profile" /> */}
             <DropZone
               acceptedFileTypes={['image/*']}
               onDropComplete={({ acceptedFiles }) => handleDrop(acceptedFiles)}
