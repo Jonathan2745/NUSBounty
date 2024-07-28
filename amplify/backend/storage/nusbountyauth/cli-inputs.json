@@ -1,0 +1,16 @@
+{
+  "resourceName": "nusbountyauth",
+  "policyUUID": "36f2cd36",
+  "bucketName": "nusbountyusers",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

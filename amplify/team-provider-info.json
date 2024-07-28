@@ -1,0 +1,24 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-nusbounty-dev-14e2b-authRole",
+      "UnauthRoleArn": "arn:aws:iam::992382505344:role/amplify-nusbounty-dev-14e2b-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::992382505344:role/amplify-nusbounty-dev-14e2b-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-nusbounty-dev-14e2b-deployment",
+      "UnauthRoleName": "amplify-nusbounty-dev-14e2b-unauthRole",
+      "StackName": "amplify-nusbounty-dev-14e2b",
+      "StackId": "arn:aws:cloudformation:us-east-1:992382505344:stack/amplify-nusbounty-dev-14e2b/10e85700-4b00-11ef-9469-0eb941e743af",
+      "AmplifyAppId": "d3eo2yx4d17ssc"
+    },
+    "categories": {
+      "auth": {
+        "nusbounty0ddfa54d": {},
+        "nusbounty7bea797a": {}
+      },
+      "storage": {
+        "nusbountyauth": {}
+      }
+    }
+  }
+}
