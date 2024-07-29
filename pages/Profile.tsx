@@ -205,7 +205,7 @@ const ProfilePage: React.FC = () => {
           <div className="flex flex-col gap-3 justify-center">
           <StorageImage className="w-64 self-center rounded-full border-2"
               alt=" Profile Picture"
-              path={`public/${user.userId}.jpg`}
+              path={`public/${user.userId}`}
               fallbackSrc= {mimic}
               onGetUrlError={(error) => console.error(error)}
             />
