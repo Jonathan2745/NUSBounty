@@ -8,6 +8,10 @@ import { TbReportMoney } from "react-icons/tb";
 
 import MainTemplate from "../src/components/template/MainTemplate.tsx";
 
+import { StorageImage } from "@aws-amplify/ui-react-storage";
+import mimic from "../src/assets/Icons/mimic.png"
+
+
 import {
   SearchField,
   SelectField,
@@ -547,7 +551,12 @@ const MyJobsPage = () => {
               >
                 <div className="flex flex-row items-center gap-4">
                   <div>
-                    <img src="../src/assets/Icons/mimic.png" className="w-14 bg-gray-300 rounded-md" alt="" />
+                  <StorageImage
+              alt=""
+              path={`public/${job?.createdBy}`}
+              fallbackSrc= {mimic}
+              onGetUrlError={(error) => console.error(error)}
+              className="w-14 bg-gray-300 rounded-md" />
                   </div>
                   <div className="flex-grow flex flex-col items-start justify-between self-stretch py-1">
                     <p className="text-xl font-semibold">{job.title}</p>
@@ -634,7 +643,12 @@ const MyJobsPage = () => {
                 >
                   <div className="flex flex-row items-center gap-4">
                     <div>
-                      <img src="../src/assets/Icons/mimic.png" className="w-14 bg-gray-300 rounded-md" alt="" />
+                    <StorageImage
+              alt=""
+              path={`public/${job?.createdBy}`}
+              fallbackSrc= {mimic}
+              onGetUrlError={(error) => console.error(error)}
+              className="w-14 bg-gray-300 rounded-md"  />
                     </div>
                     <div className="flex-grow flex flex-col items-start justify-between self-stretch py-1">
                       <p className="text-xl font-semibold">{job.title}</p>
@@ -717,7 +731,12 @@ const MyJobsPage = () => {
               >
                 <div className="flex flex-row items-center gap-4">
                   <div>
-                    <img src="../src/assets/Icons/mimic.png" className="w-14 bg-gray-300 rounded-md" alt="" />
+                  <StorageImage
+              alt=""
+              path={`public/${job?.createdBy}`}
+              fallbackSrc= {mimic}
+              onGetUrlError={(error) => console.error(error)}
+              className="w-14 bg-gray-300 rounded-md" />
                   </div>
                   <div className="flex-grow flex flex-col items-start justify-between self-stretch py-1">
                     <p className="text-xl font-semibold">{job.title}</p>

@@ -9,6 +9,8 @@ import { generateClient } from "aws-amplify/data";
 import { type Schema } from "../amplify/data/resource";
 import { useState, useEffect } from "react";
 import MainTemplate from "../src/components/template/MainTemplate.tsx";
+import { StorageImage } from "@aws-amplify/ui-react-storage";
+import mimic from "../src/assets/Icons/mimic.png"
 
 const client = generateClient<Schema>();
 
@@ -118,11 +120,12 @@ const JobPage = () => {
                 >
                   <div className="flex flex-row items-center gap-4">
                     <div>
-                      <img
-                        src="../src/assets/Icons/mimic.png"
-                        className="w-14 bg-gray-300 rounded-md"
-                        alt=""
-                      />
+                    <StorageImage
+              alt=""
+              path={`public/${job?.createdBy}`}
+              fallbackSrc= {mimic}
+              onGetUrlError={(error) => console.error(error)}
+              className="w-14 bg-gray-300 rounded-md" />
                     </div>
                     <div className="flex-grow flex flex-col items-start justify-between self-stretch py-1">
                       <p className="text-xl font-semibold">{job.title}</p>

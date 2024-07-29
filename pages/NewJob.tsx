@@ -200,7 +200,7 @@ const NewJobPage = () => {
         numberOfPax: formData.numberOfPax,
         bounty: formData.bounty,
         DateCreated: new Date().toISOString(),
-        createdBy: user.username,
+        createdBy: user.userId,
         createdByDisplayed: currentUser.username,
         duration: jobDuration,
         timeStart: formData.timeStart,
