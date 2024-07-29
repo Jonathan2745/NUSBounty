@@ -119,9 +119,7 @@ const MyJobsPage = () => {
           console.error("user not found");
           return;
         }
-        await client.models.Jobs.delete({
-          id: jobToDelete.id
-        });
+
       } else {
         console.log("Job with ID ${id} not found");
       }
@@ -129,7 +127,9 @@ const MyJobsPage = () => {
       console.error("Error deleting job:", error);
     }
 
-
+    await client.models.Jobs.delete({
+      id: bountyId,
+    });
     fetchPostedBounties();
     fetchTakenBounties();
     fetchCompletedBounties();
