@@ -128,8 +128,8 @@ const ProfilePage: React.FC = () => {
   useEffect(() => {
     const fetchIdentityId = async () => {
       try {
-        if (user) {
-          const identityId = user.userId;
+        if (user && user.signInDetails?.loginId) {
+          const identityId = user.signInDetails.loginId;
           setIdentityId(identityId);
           console.log("Fetched IdentityId: ", identityId);
         }
