@@ -206,7 +206,7 @@ const JobDetailsPage = () => {
               path={`public/${currentBounty?.createdBy}`}
               fallbackSrc= {mimic}
               onGetUrlError={(error) => console.error(error)}
-              />
+              className="w-14 bg-gray-300 rounded-md" />
             </div>
             <div className="flex-grow flex flex-col items-start justify-between self-stretch py-1">
               <p className="text-xl font-semibold">{currentBounty?.title}</p>
