@@ -24,7 +24,7 @@ const JobDetailsPage = () => {
   type User = Schema["User"]["type"];
   const [currentBounty, setCurrentBounty] = useState<Jobs | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+//   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   // Fetches Bounty Selected by User in previous page //
   const fetchBounties = async () => {
@@ -76,7 +76,7 @@ const JobDetailsPage = () => {
       currentBounty.numBooked != currentBounty.numberOfPax
       && currentBounty.numberOfPax != null
     ) {
-      setIsButtonDisabled(true);
+    //   setIsButtonDisabled(true);
 
       const { numBooked, numberOfPax, id: bountyId } = currentBounty;
       // if ( (currentnumberBooked) && (currentNumOfPax) && currentnumberBooked < currentNumOfPax ){
@@ -127,7 +127,7 @@ const JobDetailsPage = () => {
               console.log("Updated User: ", updatedUsers);
               // Update local state
               setCurrentUser(updatedUsers);
-              checkButtonStatus(currentBounty, updatedUsers);
+            //   checkButtonStatus(currentBounty, updatedUsers);
               console.log("Current Bounty", currentBounty);
               console.log("Current User", currentUser);
             } catch (errors) {
@@ -174,7 +174,7 @@ const JobDetailsPage = () => {
       const isAlreadyAccepted = user.acceptedJobs?.includes(bounty.id) || false; // returns true if already accepted //
       console.log("is Fully Booked", isFullyBooked);
       console.log("is Already Accepted", isAlreadyAccepted);
-      setIsButtonDisabled(!(isFullyBooked && isAlreadyAccepted));
+    //   setIsButtonDisabled(!(isFullyBooked && isAlreadyAccepted));
     } else {
       console.error("missing bounty or user", bounty, user);
     }
@@ -263,7 +263,6 @@ const JobDetailsPage = () => {
                       <IoPeopleOutline className="stroke-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
                       <p className="text-sm text-gray-500">Positions Filled: {currentBounty?.numBooked} / {currentBounty?.numberOfPax}</p>
                     </div>
-            {isButtonDisabled ||
                 <div className="flex flex-row items-center gap-2 col-span-4 col-start-2">
                 <button className="p-2 border-2 border-gray-300 hover:border-gray-500 group w-full h-full flex flex-row gap-2 bg-white justify-center mt-4" onClick={BookBounty}>
                     <AiOutlineFileDone
@@ -275,7 +274,7 @@ const JobDetailsPage = () => {
                     </p>
                 </button>
                 </div>
-            }
+            
           </div>
         </div>
       </div>
