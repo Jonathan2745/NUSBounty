@@ -11,6 +11,7 @@ import { type Schema } from '../amplify/data/resource';
 import { generateClient } from 'aws-amplify/api';
 
 import { StorageImage } from "@aws-amplify/ui-react-storage";
+import mimic from "../src/assets/Icons/mimic.png"
 
 const client = generateClient<Schema>();
 
@@ -191,13 +192,13 @@ const ProfilePage: React.FC = () => {
           <div className="flex flex-col gap-3 justify-center">
           <StorageImage className="w-64 self-center rounded-full border-2"
               alt=" Profile Picture"
-              path={({ identityId }) => `protected/${identityId}.jpg`}
-              fallbackSrc="public/cat.jpg"
+              path={({ identityId }) => `public/${identityId}.jpg`}
+              fallbackSrc= {mimic}
               onGetUrlError={(error) => console.error(error)}
             />
             {/* <img src="src/assets/icons/mimic.png" className="w-64 self-center rounded-full border-2" alt="Profile" /> */}
             <DropZone
-              acceptedFileTypes={['image/*']}
+              acceptedFileTypes={['image/jpeg']}
               onDropComplete={({ acceptedFiles }) => handleDrop(acceptedFiles)}
               className="p-0"
             >
@@ -217,7 +218,7 @@ const ProfilePage: React.FC = () => {
             {file && <Text key={file.name}>{file.name}</Text>}
             <button
               onClick={handleUpload}>
-              Upload
+              Upload (JPG only)
             </button>
           </div>
           <div className="flex flex-col justify-center border-2 rounded-xl p-5 gap-3">

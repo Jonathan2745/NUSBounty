@@ -10,6 +10,9 @@ import LoadingNewJob from "../src/components/LoadingScreens/LoadingNewJob.tsx";
 // import { TrendingUp, TroubleshootRounded } from "@mui/icons-material";
 
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const client = generateClient<Schema>();
 
 // Create unique IDs for Jobs //
@@ -145,7 +148,16 @@ const NewJobPage = () => {
       if ( currentUser?.walletBalance ){
         const updatedBalance = currentUser?.walletBalance - (formData.bounty * formData.numberOfPax);
         if ( updatedBalance < 0 ){
-          alert("User has Insufficent Balance to perform this booking");
+          toast.error("User has insufficient balance to perform this booking", {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
           setIsLoading(false);
           return;
         } else {
@@ -162,6 +174,7 @@ const NewJobPage = () => {
             setCurrentUser(updatedUsers);
           } catch (error) {
             console.error("Error updating user", error);
+            // show toast when this occurs //
           }
         }
       } else {
@@ -223,6 +236,21 @@ const NewJobPage = () => {
 
   return (
     <MainTemplate currentNavigation={"new_job"}>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+
+        />
+{/* Same as */}
+<ToastContainer />
     <div className="m-5 flex flex-col flex-grow justify-center">
       <div className="flex flex-col items-center justify-center m-5">
       {isLoading ? (
