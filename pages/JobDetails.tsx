@@ -263,7 +263,7 @@ const JobDetailsPage = () => {
                       <IoPeopleOutline className="stroke-gray-500" style={{height: "1.2rem", width: "1.2rem"}} />
                       <p className="text-sm text-gray-500">Positions Filled: {currentBounty?.numBooked} / {currentBounty?.numberOfPax}</p>
                     </div>
-            {isButtonDisabled &&
+
                 <div className="flex flex-row items-center gap-2 col-span-4 col-start-2">
                 <button className="p-2 border-2 border-gray-300 hover:border-gray-500 group w-full h-full flex flex-row gap-2 bg-white justify-center mt-4" onClick={BookBounty}>
                     <AiOutlineFileDone
@@ -275,7 +275,6 @@ const JobDetailsPage = () => {
                     </p>
                 </button>
                 </div>
-            }
           </div>
         </div>
       </div>
