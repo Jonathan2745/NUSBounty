@@ -142,11 +142,11 @@ const ProfilePage: React.FC = () => {
   useEffect(() => {
     loadingUser();
     fetchCurrentUser();
-    fetchCurrentUsername();
   }, []);
 
   useEffect(() => {
     fetchBio();
+    fetchCurrentUsername();
   }, [currentUser]);
 
   useEffect(() => {
