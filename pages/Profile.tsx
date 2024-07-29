@@ -157,7 +157,7 @@ const ProfilePage: React.FC = () => {
       try {
         // set loading //
         await uploadData({
-          path: `public/${identityId}`,
+          path: `public/${user.userId}`,
           data: file
         });
         // end loading //
@@ -167,7 +167,17 @@ const ProfilePage: React.FC = () => {
         alert("File upload failed. Please try again.");
       }
     } else {
-      alert("No file selected or user not authenticated");
+
+      toast.error("No file selected !", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
 
@@ -183,6 +193,8 @@ const ProfilePage: React.FC = () => {
       theme: "light",
     });
   };
+
+
 
   return (
     <MainTemplate currentNavigation={"profile"}>
