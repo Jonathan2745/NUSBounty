@@ -73,7 +73,8 @@ const JobDetailsPage = () => {
     if (
       currentBounty &&
       currentBounty.numBooked != null &&
-      currentBounty.numberOfPax
+      currentBounty.numBooked != currentBounty.numberOfPax
+      && currentBounty.numberOfPax != null
     ) {
       setIsButtonDisabled(true);
 
