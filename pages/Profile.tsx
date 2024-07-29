@@ -128,9 +128,10 @@ const ProfilePage: React.FC = () => {
   useEffect(() => {
     const fetchIdentityId = async () => {
       try {
-        if (user.signInDetails?.loginId) {
-          const identityId = user.signInDetails.loginId.toString();
+        if (user) {
+          const identityId = user.userId;
           setIdentityId(identityId);
+          console.log("Fetched IdentityId: ", identityId);
         }
       } catch (error) {
         console.error("Error fetching user identity ID:", error);
@@ -161,9 +162,9 @@ const ProfilePage: React.FC = () => {
           data: file
         });
         // end loading //
-        alert("File uploaded successfully!");
+        console.log("File uploaded successfully! to", user.userId);
       } catch (error) {
-        console.error("Error uploading file: ", error);
+        console.error("Error uploading file: ", error, user.userId);
         alert("File upload failed. Please try again.");
       }
     } else {
@@ -204,7 +205,7 @@ const ProfilePage: React.FC = () => {
           <div className="flex flex-col gap-3 justify-center">
           <StorageImage className="w-64 self-center rounded-full border-2"
               alt=" Profile Picture"
-              path={({ identityId }) => `public/${identityId}.jpg`}
+              path={`public/${user.userId}.jpg`}
               fallbackSrc= {mimic}
               onGetUrlError={(error) => console.error(error)}
             />
@@ -288,17 +289,4 @@ const ProfilePage: React.FC = () => {
 export default ProfilePage;
 
 
-// import React, { useState, useEffect, useRef } from "react";
-// import { DropZone, useAuthenticator, Text, VisuallyHidden, Button, Input } from "@aws-amplify/ui-react";
-// // import { MdCheckCircle, MdFileUpload, MdRemoveCircle } from 'react-icons/md';
-// import { uploadData } from "aws-amplify/storage";
-// import '@aws-amplify/ui-react/styles.css';
-// import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
-
-// import MainTemplate from "../src/components/template/MainTemplate";
-// import { type Schema } from '../amplify/data/resource';
-// import { generateClient } from 'aws-amplify/api';
-
-// import { StorageImage } from "@aws-amplify/ui-react-storage";
 
